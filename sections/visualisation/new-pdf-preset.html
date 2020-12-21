@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="../../assets/css/about.css" />
+        <link rel="stylesheet" href="../../assets/css/variables.css" />
+        <link rel="stylesheet" href="../../assets/css/nativize.css" />
+        <link rel="stylesheet" href="../../node_modules/font-awesome/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="../../assets/css/medapp_custom.css" />
+        <h1>Neues PDF-Preset</h1>
+        <style>
+            
+                table {
+                  font-family: arial, sans-serif;
+                  border-collapse: collapse;
+                  width: 100%;
+                }
+                
+                td, th {
+                  border: 1px solid #dddddd;
+                  text-align: left;
+                  padding: 8px;
+                }
+                
+        </style>
+    </head>
+    <body>
+        <center>
+            <label for="preset-name">Name des Presets:</label>
+            <input type="text" id="input-preset-name" name="input-preset-name"><br><br>
+        </center>
+
+        <div name="controls" id="pdf-preset-controls" class="btn-grp">
+            <button id='new-pdf-preset-close-window' class="page_buttonII">Schließen</button>
+            <button id='save-new-pdf-preset' class="page_buttonII">PDF-Preset speichern</button> 
+            <!--<input type="checkbox" id="data_display" checked=true><label>Tagesanzeige</label>-->
+        </div>
+    </body>
+
+    <script>
+        var path = require('path');
+        require(path.resolve("renderer-process/patients/new-pdf-preset"));
+    </script>
+</html>

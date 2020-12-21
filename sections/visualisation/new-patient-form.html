@@ -1,0 +1,81 @@
+<html>
+    <head>
+        <h1>Patienten-Eingabe:</h1>
+    </head>
+    <body>
+        <form id="usrform">
+            <fieldset form="usrform">
+                <legend>
+                    Personal Information:
+                </legend>
+                <label>Vorname:</label> <input type="text" name="firstname" id="fname"> <br>
+                <label>Nachname:</label> <input type="text" name="lastname" id="lname"> <br>
+                <label>Geburtsdatum:</label> <input type="date" name="birthdate" id="bdate"> <br>
+            </fieldset>
+            
+            <fieldset form="usrform">
+                <legend>
+                    Medikation:
+                </legend>
+                <label>Medikament:</label> <br> <textarea name="medicament" id="pmedicament" form="usrform" cols="100" rows="5"> Text eingeben ...</textarea> <br>
+                <label>Dosis:</label> <br> <textarea name="dosis" id="pdosis" form="usrform" cols="100" rows="5"> Text eingeben ...</textarea> <br>
+            </fieldset>
+            
+            <fieldset form="usrform">
+                <legend>
+                    Notizen:
+                </legend>
+                <textarea name="comment" id="pcomment" form="usrform" cols="100" rows="20"> Text eingeben ...</textarea>
+            </fieldset>
+            
+            <button name="cancel" id="pcancel" form="usrform" onClick="cancel_record()">Cancel</button><button name="submit" id="psubmit" form="usrform" onClick="save_record()">Submit</button>
+            
+        </form>
+        
+        <script>
+            function save_record(){
+                var fname = document.getElementById('fname').value;
+                var lname = document.getElementById('lname').value;
+                var bdate = document.getElementById('bdate').value;
+                var pmed = document.getElementById('pmedicament').value;
+                var pdosis = document.getElementById('pdosis').value;
+                var pcomm = document.getElementById('pcomment').value;
+
+                var new_patient = {firstname:fname,
+                                   lastname:lname,
+                                   birthdate:bdate};
+                
+
+                //First check if there is already a patients.json file available. If yes update it. Otherwise create it.
+                var fs = require('fs');
+                var path = 'patients/patients.json';
+                if (fs.existsSync(path)){
+                    // read the file and update it
+                    var patients = fs.readFileSync(path, 'utf8', function(err, data){
+                        if (err) throw err;
+                        console.log('The patient has been successfully read!');
+                    });
+                    var patients_object = JSON.parse(patients);
+                    patients_object.patients.push(new_patient);
+                    var patients_json = JSON.stringify(patients_object);
+                    alert(patients_json)
+                    fs.writeFileSync(path, patients_json, function(err){
+                        if (err) throw err;
+                        message.log('The Patient has been successfully created!')
+                    });
+                }else{
+                    // create a JSON array of objects.
+                    var patients = {patients: [{firstname:fname, lastname:lname, birthdate:bdate}]};
+                    var patients_json = JSON.stringify(patients);
+                    fs.writeFileSync(path, patients_json, function(err){
+                        if (err) throw err;
+                        message.log('The Patient has been successfully created!')
+                    });
+                }
+
+                window.open('','_parent',''); 
+                window.close();
+            }
+        </script>
+    </body>
+</html>

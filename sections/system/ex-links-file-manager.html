@@ -1,0 +1,69 @@
+<template class="task-template">
+  <section
+    id="ex-links-file-manager-section"
+    class="section js-section u-category-system"
+  >
+    <header class="section-header">
+      <div class="section-wrapper">
+        <h1>
+          <i class="fa fa-files-o section-icon" aria-hidden="true"></i> Externe
+          Links und lokaler Explorer
+        </h1>
+        <h3>
+          Schnelle Zugriffe auf native Elementen im lokalen Dateimanager und auf
+          dem voreingestellten Web-Browser.
+        </h3>
+      </div>
+    </header>
+
+    <div class="demo">
+      <div class="demo-wrapper">
+        <button
+          id="open-file-manager-demo-toggle"
+          class="js-container-target demo-toggle-button"
+        >
+          Dateimanager
+        </button>
+        <div class="demo-box">
+          <div class="demo-controls">
+            <button class="demo-button" id="open-file-manager">
+              View Demo
+            </button>
+          </div>
+          <p>Die Taste "View Demo" öffnet den lokalen Explorer.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo">
+      <div class="demo-wrapper">
+        <button
+          id="open-ex-links-demo-toggle"
+          class="js-container-target demo-toggle-button"
+        >
+          Externe Links
+        </button>
+        <div class="demo-box">
+          <div class="demo-controls">
+            <button class="demo-button" id="open-ex-links">View Demo</button>
+          </div>
+          <p>
+            Wenn Sie die Taste "View Demo" klicke, öffnet die standarte webseite
+            in Ihrem Browser.
+          </p>
+
+          <div class="demo-protip">
+            <h2>ProTip</h2>
+            <strong>Öffnen Sie alle ausgehenden Links extern.</strong>
+            <p>Bla bla bla.....</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      require("./renderer-process/native-ui/ex-links-file-manager/file-manager");
+      require("./renderer-process/native-ui/ex-links-file-manager/ex-links");
+    </script>
+  </section>
+</template>

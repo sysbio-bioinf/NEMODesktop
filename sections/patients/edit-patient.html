@@ -1,0 +1,82 @@
+<template class="task-template">
+  <section id="edit-patient-section" class="section js-section u-category-patients">
+
+    <header class="section-header">
+      <div class="parent">
+        <h1 class="header_title">
+          <i class="fa fa-pencil-square-o section-icon" aria-hidden="true"></i>
+          Patientendaten bearbeiten
+        </h1>
+      </div>
+    </header>
+
+    <div class="parent">
+
+      <div class="page_navigation">
+        <input type="text" name="search-text" id="psearch-text" placeholder="Suchen ..." class="page_text_input">
+        <!--<button id='search-button'><i class="fa fa-search"></i></button><br>-->
+        <table id="ppatients-table-list" name="patients-table-list" class="scrolable_table_2">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Vorname</th>
+              <th>Nachname</th>
+              <th>Geburtsdatum</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table><br>
+      </div>
+      <div class="page_content">
+
+        <fieldset id="pdata" class="data_fieldset">
+        <label class="page_label">ID: </label><input type="text" name="pid" id="ppid" readOnly=true
+          class="page_text_input"><button id="id-edit-button" class="icon_button"><i class="fa fa-pencil" style="font-size:1.5vw"></i></button><br>
+        <label class="page_label">Vorname: </label><input type="text" name="fname" id="pfname" readOnly=true
+          class="page_text_input"><button id="fname-edit-button" class="icon_button"><i class="fa fa-pencil" style="font-size:1.5vw"></i></button><br>
+        <label class="page_label">Nachname: </label><input type="text" name="lname" id="plname" readOnly=true
+          class="page_text_input"><button id="lname-edit-button" class="icon_button"><i class="fa fa-pencil" style="font-size:1.5vw"></i></button><br>
+        <label class="page_label">Geburtsdatum: </label><input type="text" name="bdate" id="pbdate" readOnly=true
+          class="page_text_input"><button id="bdate-edit-button" class="icon_button"><i class="fa fa-pencil" style="font-size:1.5vw"></i></button><br>
+        <label class="page_label">Zuletzt bearbeitet am: </label><input type="date" name="update-date" id="pupdate-date"
+          readOnly=true class="page_text_input"><br>
+        </fieldset>
+
+        <fieldset id="pmeds" class="page_fieldset">
+          <legend>
+            Medikation:
+          </legend>
+          <!--<label class="page_label">Medikament:</label> <br>-->
+          <textarea name="medicament" id="pmedicament" cols="70" rows="2" placeholder="Text eingeben ..." readonly=true
+            class="page_textarea"></textarea> <br>
+          <button id="med-edit-button" class="icon_button"><i class="fa fa-pencil" style="font-size:1.5vw"></i></button><br>
+        </fieldset>
+
+        <fieldset id="pnotes" class="page_fieldset">
+          <legend>
+            Notizen:
+          </legend>
+          <textarea name="comment" id="pcomment" cols="70" rows="2" placeholder="Text eingeben ..." readonly=true
+            class="page_textarea"></textarea><br>
+          <button id="notes-edit-button" class="icon_button"><i class="fa fa-pencil" style="font-size:1.5vw"></i></button><br>
+        </fieldset>
+        <br>
+        <button id="save-edit-button" class="icon_button" disabled=true><i class="fa fa-save" style="font-size:1.5vw"></i></button><br>
+
+      </div>
+
+    </div>
+    <section id="db-status-bar">
+      <div class="page_footer">
+        <label class="footer_label">Datenbank Status: </label><input type="text" id="db-status" readOnly=true
+          placeholder="..." class="footer_text_input">
+      </div>
+    </section>
+
+
+    <script>
+      require(path.resolve(__dirname,'renderer-process/patients/edit-patient'));
+    </script>
+
+  </section>
+</template>

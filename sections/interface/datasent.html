@@ -1,0 +1,108 @@
+<template class="task-template">
+  <section id="datasent-section" class="section js-section u-category-patients">
+    <header class="section-header">
+      <div class="section-wrapper">
+        <h1>
+          <i class="fa fa-camera section-icon" aria-hidden="true"></i> Daten
+          versenden
+        </h1>
+        <h3>
+          Der Behandler kann Ratschläge, Bemerkungen für seine Patienten verfassen und dann als QR Code versenden.
+        </h3>
+      </div>
+    </header>
+    <style>
+      #loadingMessage {
+        text-align: center;
+        padding: 40px;
+        background-color: #eee;
+      }
+
+      /* #canvas {
+        width: 100%;
+      } */
+
+      #output {
+        margin-top: 20px;
+        background: #eee;
+        padding: 10px;
+        padding-bottom: 0;
+      }
+
+      #output div {
+        padding-bottom: 10px;
+        word-wrap: break-word;
+      }
+
+      #noQRFound {
+        text-align: center;
+      }
+    </style>
+    <script>
+      // require('./assets/jsQR');
+      require('./assets/jsqrdemo.js');
+      require('./assets/qr-generator.js')
+    </script>
+    <div class="demo">
+      <div class="demo-wrapper">
+        <div id="loadingMessage">
+          JSQR: Keine Webcams gefunden!
+        </div>
+        <canvas id="canvas"></canvas>
+        <div id="output">
+          <div id="outputMessage">Kein QR Code vorhanden.</div>
+          <div hidden>
+            <b>Data: </b>
+            <span id="outputData"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="demo">
+      <div class="demo-wrapper">
+        <button id="print-pdf-demo-toggle" class="js-container-target demo-toggle-button">
+          JsQR aus Dateien
+          <div class="demo-meta u-avoid-clicks">
+            Supports: Win, macOS, Linux
+          </div>
+        </button>
+        <div class="demo-box">
+
+          <input type="file" id="file-selector-demo" />
+
+          <div id="loaded-image" width="300px" height="300px"></div>
+
+          <canvas id="canvasdemo"></canvas>
+
+          <b>Entdeckter QR Code:</b>
+          <span id="file-qr-result-demo">None</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo">
+      <div class="demo-wrapper">
+        <button id="print-pdf-demo-toggle" class="js-container-target demo-toggle-button">
+          QR Code generieren
+          <div class="demo-meta u-avoid-clicks">
+            Supports: Win, macOS, Linux
+          </div>
+        </button>
+        <div class="demo-box">
+          <div>
+            <h3>Textinhalt:</h3>
+            <textarea name="textarea" id="textarea" class="form-control" placeholder="Geben Sie einen kurzen Text ein"></textarea>
+          </div>
+          <div width="150" height="150">
+            <h3>Der generierte QR-Code:</h3>
+            <img id="img-qr">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</template>

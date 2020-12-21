@@ -1,0 +1,45 @@
+{
+  "name": "medapp",
+  "keywords": [],
+  "author": "",
+  "version": "1.0.0",
+  "license": "ISC",
+  "main": "main.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "dev": "electron-webpack dev",
+    "compile": "electron-webpack",
+    "dist": "yarn compile && electron-builder",
+    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
+    "start": "electron ."
+  },
+  "dependencies": {
+    "chart.js": "^2.9.3",
+    "chartjs-plugin-zoom": "^0.7.5",
+    "csv-writer": "^1.6.0",
+    "electron-context-menu": "^0.16.0",
+    "electron-settings": "^3.2.0",
+    "electron-shortcut-normalizer": "^1.0.0",
+    "font-awesome": "^4.7.0",
+    "fsm-as-promised": "^0.16.0",
+    "glob": "^7.1.6",
+    "highlight.js": "^9.18.1",
+    "iconv-lite": "^0.5.1",
+    "instascan": "^2.0.0-rc.4",
+    "lokijs": "^1.5.8",
+    "source-map-support": "^0.5.12",
+    "usb": "^1.6.2",
+    "uvc-control": "^1.0.2",
+    "visibilityjs": "^2.0.2",
+    "webrtc-adapter": "^7.5.0"
+  },
+  "devDependencies": {
+    "electron": "^5.0.6",
+    "electron-builder": "^21.0.11",
+    "electron-rebuild": "^1.10.1",
+    "electron-webpack": "^2.7.4",
+    "webpack": "~4.35.3"
+  }
+}

@@ -1,0 +1,48 @@
+<template class="task-template">
+  <section id="list-patients-section" class="section js-section u-category-patients">
+    <header class="section-header">
+      <div class="parent">
+        <h1 class="header_title">
+          <i class="fa fa-users section-icon" aria-hidden="true"></i> Übersicht
+          aller Patienten
+        </h1>
+      </div>
+    </header>
+
+    <p id="result"></p>
+
+    <div class="parent">
+
+      <div class="page_navigation">
+        <input type="text" name="search-text" id="search-patients" placeholder="Suchen ..."
+          class="page_text_input">
+        <!--<button id='search-patients-button'><i class="fa fa-search"></i></button><br>-->
+        <table id="list-of-patients" name="list-of-patients-table" class="scrolable_table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Vorname</th>
+              <th>Nachname</th>
+              <th>Geburtsdatum</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table><br>
+      </div>
+
+
+      <section id="db-status-bar">
+        <div class="page_footer">
+          <label class="footer_label">Datenbank Status: </label><input type="text" id="db-status-list-patients"
+            readOnly=true placeholder="..." class="footer_text_input">
+        </div>
+      </section>
+
+    </div>
+
+    <script>
+      require("./renderer-process/patients/list-patients");
+    </script>
+
+  </section>
+</template>

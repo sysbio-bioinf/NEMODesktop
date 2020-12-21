@@ -1,0 +1,69 @@
+<html>   
+    <head>
+        <link rel="stylesheet" href="../../assets/css/about.css" />
+        <link rel="stylesheet" href="../../assets/css/variables.css" />
+        <link rel="stylesheet" href="../../assets/css/nativize.css" />
+        <link rel="stylesheet" href="../../node_modules/font-awesome/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="../../assets/css/medapp_custom.css" />
+    </head>
+
+<style>
+    canvas {
+        display: none;
+    }
+
+    hr {
+        margin-top: 32px;
+    }
+
+    input[type="file"] {
+        display: block;
+        margin-bottom: 16px;
+    }
+
+    div {
+        margin-bottom: 16px;
+    }
+</style>
+
+<button class="page_button" id="qr_cancel">Schließen</button>
+
+<h3>
+    Art des Termins:
+</h3>
+<fieldset>
+    <input type="radio" id="regular" name="Termin" value="Regulärer Termin" checked>
+    <label for="regular"> Regulärer Termin</label>
+    <input type="radio" id="nonregular" name="Termin" value="Außerplanmäßiger Termin">
+    <label for="nonregular"> Außerplanmäßiger Termin</label>
+</fieldset>
+
+<div class="demo">
+    <div class="demo-wrapper">
+        <h4>QR-Code Leser</h4>
+        <div class="video-box"><video height="400" id="preview"></video></div>
+    </div>
+</div>
+
+<h4 id="QRheader">
+    Gelesene QR-Codes: 0 Codes
+</h4>
+
+<h4 id="DBheader">
+    Neue QR-Codes: 0 Codes
+</h4>
+
+<!-- <h4 id="AlreadyDBheader">
+    Bereits gespeicherte QR-Codes: 0 Codes
+</h4>
+-->
+
+<script>
+    const path = require('path');
+    const Scanner = require(path.resolve(__dirname,"../../assets/scanner"));
+    const Camera = require(path.resolve(__dirname,"../../assets/camera"));
+    require(path.resolve(__dirname,"../../renderer-process/media/qrcode_reader"));
+    console.log("Alle eingebunden");
+</script>
+
+</html>

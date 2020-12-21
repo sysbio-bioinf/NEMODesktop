@@ -1,0 +1,394 @@
+/*Style for labels*/
+.page_label{
+  width: 10vw;
+  display: inline-block;
+  margin-left: 0.25vw;
+  margin-bottom: 0.25vh;
+  text-align: left;
+}
+
+/*Style for text inputs*/
+.page_text_input{
+  width: 15vw;
+  padding: 2.5%;
+  margin-left: 0.25vw;
+  margin-bottom: 0.5vh;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border-color: black;
+  font-size: 1.15vw;
+}
+
+/*Style for fieldsets*/
+.page_fieldset{
+  display: inline-block;
+  border-color: gray;
+  border-radius: 10px;
+  margin-bottom: 0.5vh;
+  /*margin-left: 0.25vw;*/
+  width: 35vw;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.chart_container{
+  display: inline-block;
+  /*border-style: solid;
+  border-width: 1.5px;
+  border-color: gray;
+  border-radius: 10px;
+  margin-bottom: 0.5vh;
+  margin-left: 0.25vw;*/
+  width: 100%;
+  height: 100%; /*new entry*/ 
+  position: relative; /*new entry*/
+  /*resize: both; new entry
+  overflow: auto; new entry*/
+}
+
+.data_fieldset{
+  display: inline-block;
+  border: none;
+  margin-bottom: 0.5vh;
+  margin-left: 0.25vw;
+  width: 37.5vw;
+  /*margin: auto;*/
+}
+
+/*Style for buttons*/
+.page_button{
+  border-radius: 10px;
+  border: 2px solid #008CBA;
+  background-color: white;
+  margin-left: 0.25vw;
+  margin-bottom:0.5vh;
+  text-align: center;
+  width: 10vw;
+  height: 4vh;
+  font-size: 1vw;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.page_button:hover {
+  background-color: #008CBA;
+  color: white;
+}
+
+.page_buttonII{
+  border-radius: 10px;
+  border: 2px solid #008CBA;
+  background-color: white;
+  margin-left: 0.25vw;
+  margin-bottom:0.5vh;
+  margin-top: 1vh;
+  text-align: center;
+  width: 12vw;
+  height: 8vh;
+  font-size: 1.5vw;
+}
+
+.page_buttonII:hover {
+  background-color: #008CBA;
+  color: white;
+}
+
+.icon_button{
+  border-radius: 10px;
+  border: 2px solid #008CBA;
+  background-color: white;
+  margin-left: 0.25vw;
+  margin-bottom:0.5vh;
+  text-align: center;
+  width: 5vh;
+  height: 5vh;
+  font-size: 1vw;
+}
+
+.icon_button:hover {
+  background-color: #008CBA;
+  color: white;
+}
+
+/*Style for buttons in parent*/
+.parent_button{
+  border-radius: 10px;
+  border: 2px solid #008CBA;
+  background-color: white;
+  margin-left: 0.25vw;
+  margin-bottom:0.5vh;
+  text-align: center;
+  width: 10vw;
+  height: 4vh;
+  font-size: 1vw;
+  /*display: block;
+  margin: auto;*/
+}
+
+.flex_center {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  /*height: 100%;*/
+}
+
+.parent_button:hover {
+  background-color: #008CBA;
+  color: white;
+}
+
+/*Style for textareas*/
+.page_textarea{
+  border-color: gray;
+  border-radius: 10px;
+  padding: 2.5%;
+  margin-left:0.25vw;
+  font-size: 1vw;
+  width: 37.5vw;
+}
+
+/*Style for text inputs in footer*/
+.footer_text_input{
+  width: 15vw;
+  height: 2vh;
+  margin:0.25vw;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border-color: black;
+  font-size:0.8vw;
+  text-align: center;
+}
+
+/*Style for labels in footer*/
+.footer_label{
+  width: 10vw;
+  display: inline-block;
+  margin: 0.25vw;
+  text-align: left;
+}
+
+/*Style for page header*/
+.header_title{
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 30px;
+  margin-bottom: 50px;
+  padding: 10px;
+}
+
+/*Style for text content*/
+.text_content{
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 5px;
+}
+
+.btn-grp{
+  display: inline-grid;
+  grid-template-columns: auto auto auto auto auto auto auto;
+}
+
+
+/*Style for the differenet elements to be displayed (<div>)*/
+
+.parent{
+  width: 100%;
+  height: 100%;
+  margin: 0.25vw;
+  font-size: 1vw;
+}
+      
+.page_content{
+  width: 60%;
+  height: 75%;
+  position: relative;
+  float: left;
+  padding-left: 1vw;
+}
+
+.data_visualization{
+  width: 95%; /*80%;*/
+  height: 50%; /*50%;*/
+  position: relative;
+  float: left;
+}
+
+.isResizable{
+  resize: both; /*new entry*/
+  overflow: auto; /*new entry*/
+  border-style: solid;
+  border-width: 1.5px;
+  border-color: gray;
+  border-radius: 10px;
+  margin-bottom: 0.5vh;
+  margin-left: 0.25vw;
+  width: 70vw;
+  height: 25vw;
+  max-width: 100%;
+  max-height: 100%;
+  /*min-width: ;
+  min-height: ;*/
+}
+
+.isResizableT{
+  resize: both; /*new entry*/
+  overflow: auto; /*new entry*/
+  border-style: solid;
+  border-width: 1.0px;
+  border-color: rgba(128, 128, 128, 0);
+  border-radius: 5px;
+  margin-bottom: 0.1vh;
+  margin-left: 0.1vw;
+  width: 122vw;
+  height: 11vw;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.data_navigation{
+  width: 40%;
+  height: 20%;
+  position: relative;
+  float: left;
+}
+
+.visualization_text_input{
+  width: 15vw;
+  height: 2.5vw;
+  padding: 2.5%;
+  margin-left: 0.25vw;
+  margin-bottom: 0.5vh;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border-color: black;
+  font-size: 1.15vw;
+  text-overflow:ellipsis;
+}
+
+.page_navigation{
+  width: 40%;
+  height: 75%;
+  position: relative;
+  float: left;
+}
+      
+.page_footer{
+  position:fixed;
+  bottom: 0vh;
+  width: 100%;
+  font-size: 0.8vw;
+}
+
+/*Style of the table displaying the participants or patients*/
+.scrolable_table tbody{
+  overflow: auto;
+  display: block;
+  height: 10vh; /*200px;*/
+  width: 30vw; /*100%;*/
+  table-layout: fixed;
+  word-wrap: break-word;
+}
+
+.scrolable_table thead, tbody tr{
+  display:table;
+  width: 30vw;
+  table-layout: fixed;
+}
+
+.scrolable_table_2 tbody{
+  overflow: auto;
+  display: block;
+  height: 70vh; /*200px;*/
+  width: 30vw; /*100%;*/
+  table-layout: fixed;
+  word-wrap: break-word;
+}
+
+.scrolable_table_2 thead, .scrolable_table_2 tbody tr{
+  display:table;
+  width: 30vw;
+  table-layout: fixed;
+  border: 0.5px solid gray;
+}
+
+.scrolable_table-3 tbody{
+  overflow: auto;
+  display: block;
+  height: 10vh; /*200px;*/
+  width: 122vh; /*100%;*/
+  table-layout: fixed;
+  word-wrap: break-word;
+}
+
+.scrolable_table-3 thead, .scrolable_table-3 tbody tr{
+  display:table;
+  width: 122vh;
+  table-layout: fixed;
+  border: 0.5px solid gray;
+  resize: both; 
+  overflow: auto; 
+}
+
+.scrolable_table-4 tbody{
+  overflow: auto;
+  display: block;
+  height: 60vh; /*200px;*/
+  width: 160vh; /*100%;*/
+  table-layout: fixed;
+  word-wrap: break-word;
+}
+
+.scrolable_table-4 thead, .scrolable_table-4 tbody tr{
+  display:table;
+  width: 160vh;
+  table-layout: fixed;
+  border: 0.5px solid gray;
+  resize: both; 
+  overflow: auto; 
+}
+
+.scrolable_table-5 tbody{
+  overflow: auto;
+  height: 60vh; /*200px;*/
+  width: 90vh; /*100%;*/
+  table-layout: fixed;
+  word-wrap: break-word;
+}
+
+.scrolable_table-5 thead, .scrolable_table-5 tbody tr{
+  display:table;
+  width: 90vh;
+  table-layout: fixed;
+  border: 0.1px solid gray;
+  resize: both; 
+  overflow: auto; 
+}
+
+
+/*.scrolable_table thead tr{
+  display: block;
+}*/
+
+/*.scrolable_table{
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 20vw; /*100%;*/
+/*}*/
+
+/*.scrolable_table td{
+  /*padding: 0.125vw; 5px;*/
+  /*width: 5vw;/*100px;*/
+  /*border: 1px solid black;
+  font-size: 1vw;
+  text-align: center;
+}*/
+
+/*.scrolable_table th{
+  /*padding: 0.125vw; 5px;*/
+  /*width: 5vw;/*100px;*/
+  /*border: 1px solid black;
+  font-size: 1vw;
+  text-align: center;
+}*/

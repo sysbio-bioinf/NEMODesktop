@@ -1,0 +1,60 @@
+<template class="task-template">
+  <section
+    id="notifications-section"
+    class="section js-section u-category-system"
+  >
+    <header class="notifications">
+      <div class="section-wrapper">
+        <h1>
+          <i class="fa fa-bell-o section-icon" aria-hidden="true"></i>Desktop
+          Nachrichten
+        </h1>
+        <h3>
+          Das Module ermöglicht Ihnen nützliche Desktop Nachrichten
+          (notifications).
+        </h3>
+
+        <p>Bla blu blue blau....</p>
+      </div>
+    </header>
+
+    <div class="demo">
+      <div class="demo-wrapper">
+        <button
+          id="basic-notification-demo-toggle"
+          class="js-container-target demo-toggle-button"
+        >
+          Einfache Nachrichten
+        </button>
+        <div class="demo-box">
+          <div class="demo-controls">
+            <button class="demo-button" id="basic-noti">View demo</button>
+          </div>
+          <p>Das Demo gibt eine grundlegende Text-Nachricht.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo">
+      <div class="demo-wrapper">
+        <button
+          id="advanced-notification-demo-toggle"
+          class="js-container-target demo-toggle-button"
+        >
+          Nachricht with Bild
+        </button>
+        <div class="demo-box">
+          <div class="demo-controls">
+            <button class="demo-button" id="advanced-noti">View demo</button>
+          </div>
+          <p>Das Demo schaut Text und ein Bild</p>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      require("./renderer-process/native-ui/notifications/basic-notification");
+      require("./renderer-process/native-ui/notifications/advanced-notification");
+    </script>
+  </section>
+</template>

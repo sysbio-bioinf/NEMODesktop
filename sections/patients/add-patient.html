@@ -1,0 +1,61 @@
+<template class="task-template">
+    <section id="add-patient-section" class="section js-section u-category-patients">
+
+        <header class="section-header">
+            <div class="parent">
+                <h1 class="header_title">
+                    <i class="fa fa-user-plus section-icon" aria-hidden="true"></i> Neuen
+                    Patienten aufnehmen
+                </h1>
+            </div>
+        </header>
+
+
+        <div class="parent">
+
+            <div class="page_navigation">
+                <h2>Patientenliste</h2>
+                <table id="apatients-table-list" name="apatients-table-list" class="scrolable_table_2">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Vorname</th>
+                            <th>Nachname</th>
+                            <th>Geburtsdatum</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table><br>
+            </div>
+
+            <div class="page_content">
+                <div class="flex_center">
+                <fieldset id="pid" class="page_fieldset">
+                    <legend>
+                        Stammdaten:
+                    </legend>
+                    <label class="page_label">Vorname:</label> <input type="text" name="firstname" id="fname"
+                        placeholder="Text eingeben ..." class="page_text_input"> <br>
+                    <label class="page_label">Nachname:</label> <input type="text" name="lastname" id="lname"
+                        placeholder="Text eingeben ..." class="page_text_input"> <br>
+                    <label class="page_label">Geburtsdatum:</label> <input type="date" name="birthdate" id="bdate"
+                        class="page_text_input"> <br>
+                </fieldset>
+                </div>
+                <br>
+                <div class="flex_center">
+                    <button name="clear" id="pclear" class="parent_button">Zurücksetzen</button> 
+                    <button name="submit" id="psubmit" class="parent_button">Speichern</button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <script>
+            const path = require('path');
+            require(path.resolve(__dirname,'renderer-process/patients/add-patient'));
+        </script>
+
+    </section>
+</template>

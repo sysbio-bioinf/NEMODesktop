@@ -1,0 +1,141 @@
+<template class="task-template">
+  <section id="data-receiver-section" class="section js-section u-category-patients">
+    <header class="section-header">
+      <div class="section-wrapper">
+        <h1>
+          <i class="fa fa-video-camera section-icon" aria-hidden="true"></i> QR
+          Code empfangen
+        </h1>
+        <h3>
+          Daten von Patienten werden als QR Code mittels Videokamera oder als Bilddatei empfangen und lesen.
+        </h3>
+      </div>
+    </header>
+
+    <style>
+      canvas {
+        display: none;
+      }
+      hr {
+        margin-top: 32px;
+      }
+      input[type="file"] {
+        display: block;
+        margin-bottom: 16px;
+      }
+      div {
+        margin-bottom: 16px;
+      }
+    </style>
+
+    <div class="demo">
+      <div class="demo-wrapper">
+        <h4>QR-Code Leser</h4>
+        <div class="video-box"><video id="preview"></video></div>
+      </div>
+    </div>
+    <div class="demo">
+      <h3>Entdeckter QR Code:</h3>
+      <div class="demo-wrapper">
+        <div id="resultDiv"></div>
+      </div>
+    </div>
+    <hr />
+    <!-- <div class="demo">
+      <div class="demo-wrapper">
+        <h4>QR-Code Leser 2 mit Video</h4>
+        <div class="video-box">
+          <video muted autoplay playsinline id="qr-video"></video>
+          <canvas id="debug-canvas"></canvas>
+        </div>
+        <div>
+          <input type="checkbox" id="debug-checkbox" />
+          <span>Debug image?</span>
+        </div>
+        <b>Entdeckter QR Code: </b> <span id="cam-qr-result">None</span>
+      </div>
+    </div>
+
+    <hr />
+    <div class="demo">
+      <div class="demo-wrapper">
+        <button id="sync-msg-demo-toggle" class="js-container-target demo-toggle-button">
+          QR Code aus Bilddatei
+          <div class="demo-meta u-avoid-clicks">
+            Supports: Win, macOS, Linux
+          </div>
+        </button>
+        <div class="demo-box">
+          <input type="file" id="file-selector" /> <b>Entdeckter QR Code:</b>
+          <span id="file-qr-result">None</span>
+        </div>
+      </div>
+    </div> -->
+
+    <script>
+      require("./assets/instascan.min.js");
+      require("./assets/qr-scanner.min.js");
+      require("./assets/qr-scanner-modul.js");
+    </script>
+
+    <script type="text/javascript">
+      var QRCode = require("./models/QRCode");
+      var database = require("./database");
+      let scanner = new Instascan.Scanner({
+        video: document.getElementById("preview"),
+        captureImage: true
+      });
+      let resultDiv = document.getElementById("resultDiv");
+      scanner.addListener("scan", function (content) {
+        console.log(content);
+      });
+      Instascan.Camera.getCameras()
+        .then(function (cameras) {
+          if (cameras.length > 0) {
+            let camera = cameras[0];
+            let cameraId = cameras[0].id;
+            scanner.start(camera)
+              .then(function () {
+                scanner.addListener('scan', function (content, img) {
+                  if(QRCode.checkString(content)) {
+                    var entries = QRCode.parseStringToRecords(content);
+                    var addedToDb = 0;
+                    var alreadyInDb = 0;
+                    for (var idx = 0; idx < entries.length; idx++) {
+                      if(database.checkDuplicateEntry(entries[idx])) {
+                        alreadyInDb++;
+                        //alert("Database entry already there, skipping");
+                      }else if(!database.checkForID(entries[idx])) {
+                        alert("Patient ID not found in database")
+                        break;
+                      }else {
+                        database.addEntry(entries[idx]);
+                        addedToDb++;
+                        //alert("Database entry created!")
+                      }
+                    }
+                    alert(addedToDb + " von " +entries.length +" Einträgen in Datenbank hinzugefügt. \n" + alreadyInDb + " Einträge bereits in Datenbank.");
+                  }else {
+                    alert("QR Code ist nicht im richtigen Format!");
+                  }
+                  resultDiv.innerHTML = content;
+                });
+              })
+              .catch(function (err) {
+                console.log(err);
+              });
+          } else {
+            console.error("No cameras found.");
+          }
+        })
+        .catch(function (e) {
+          console.error(e);
+        });
+      function usingCamera() {
+        flash = document.getElementById("embedflash");
+        flash.ccCapture();
+        qrcode.decode();
+      }
+    </script>
+  </section>
+</template>

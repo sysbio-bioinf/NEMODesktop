@@ -1,0 +1,721 @@
+<template class="task-template">
+    <section id="heatmap-section" class="section js-section u-category-patients">
+
+        <header class="section-header">
+            <div class="parent">
+                <h1 class="header_title">
+                        <i class="fa fa-eye section-icon" aria-hidden="true"></i>
+                        Heatmap
+                </h1>
+            </div>
+        </header>
+
+        <div class="parent">
+            <div class="isResizableT"> 
+                    <div name="patients-navigation" id="patient-navHeat" class="data_navigation">
+                            <input type="text" placeholder="Suchen ..." id="patients-search-barHeat" name="searchbar"
+                                class="page_text_input">
+                            
+                            <table id="patients-table-navigationHeat" name="patients-table-list-navigation" class="scrolable_table-3">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Vorname</th>
+                                        <th>Nachname</th>
+                                        <th>Geburtsdatum</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table><br>
+                        </div>
+            </div> 
+
+            <div name="main" style="width:auto; overflow: auto;">
+		<h2 id="patient-nameHeat">Patient ...</h2>
+                <!-- <input type="text" placeholder="Patient ..." id="patient-nameHeat"
+                    name="patientid" readOnly=true class="visualization_text_input">
+                </input> -->
+                
+		<div name="heatmapTable" id="heatmapTable"> 
+			<!--			
+			<style>
+				  table.heatmap {
+				    text-align: center;
+				    background-color: rgb(240,240,240);
+				    border-color: black;
+				    border: 0px solid rgb(128,128,128);
+				    border-radius: 5px;
+				    border-spacing: 0px;
+				    border-collapse: collapse;
+				    margin-top: 2em;
+				    margin-bottom: 2em;
+				    margin-left: 0.5em;
+				    margin-right: 1.5em;
+					width: auto;
+					table-layout: auto;
+				  }
+				  table.heatmap tbody {
+					  table-layout: auto;
+				  }
+				  table.heatmap tr {
+					width: auto;
+					table-layout: auto;
+					display: table-row;
+				  }
+				  table.heatmap td {
+				    border: 1px solid rgb(255,255,255);
+					font-size: 12pt;
+					width: auto;
+				  }
+				  table.heatmap th {
+				    border: 1px solid rgb(255,255,255);
+				    padding-left: 5px;
+				    padding-right: 5px;
+				    white-space: nowrap;
+					font-size: 12pt;
+					width: auto;
+				  }
+				  td.grade0 { background-color: rgb(169,255,76); padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.grade1 { background-color: rgb(255,255,0); padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.grade2 { background-color: rgb(255,165,0); padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.grade3 { background-color: rgb(255,0,0); padding: 5px; border: 0px solid rgb(255,255,255);}
+				  td.gradeA1 { background-color: rgb(147,210,79); padding: 5px; border: 0px solid rgb(255,255,255);}
+				  td.gradeA0 { background-color: rgb(232,213,123); padding: 5px; border: 0px solid rgb(255,255,255);}
+				  td.gradeM0 { background-color: rgb(160,215,255); padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.gradeM1 { background-color: rgb(85,83,255); padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.gradeundefined,td.gradenull { background-color: rgb(180,180,180); padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.visit { background-color: rgb(80,80,80); padding: 5px; border: 0px solid rgb(255,255,255);}
+				  td.medupdate { background-color: rgb(128,72,184); padding: 5px; border: 0px solid rgb(255,255,255);}
+				  td.time { padding-left: 0px; padding-right: 0px; padding-top: 15px; padding-bottom: 15px; font-size: 80%; }
+				  td.even { background-color: rgb(240,240,240); }
+				  td.odd { background-color: rgb(220,220,220); }
+				  td.day { padding: 2px; padding-top: 4px; }
+				  td.month { padding: 2px; padding-top: 4px; }
+				  td.gap { min-width: 2px; background-color: rgb(255,255,255); }
+				  td.gapday { padding: 2px; padding-top: 4px; color: red; font-weight: bold; }
+				  td.cl0 { background-color: #F7EFFA; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl1 { background-color: #F6EBF8; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl2 { background-color: #F4E7F7; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl3 { background-color: #F2E3F6; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl4 { background-color: #F0DFF4; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl5 { background-color: #EFDBF3; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl6 { background-color: #EDD7F1; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl7 { background-color: #ECD4F0; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl8 { background-color: #EAD0EF; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl9 { background-color: #E9CCED; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl10 { background-color: #E7C8EC; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl11 { background-color: #E6C4EA; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl12 { background-color: #E5C0E9; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl13 { background-color: #E3BDE7; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl14 { background-color: #E2B9E6; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl15 { background-color: #E1B5E4; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl16 { background-color: #E0B2E2; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl17 { background-color: #DEAEE1; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl18 { background-color: #DDAADF; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl19 { background-color: #DCA6DE; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl20 { background-color: #DBA3DC; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl21 { background-color: #DA9FDA; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl22 { background-color: #D99CD9; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl23 { background-color: #D798D7; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl24 { background-color: #D594D4; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl25 { background-color: #D491D2; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl26 { background-color: #D28DCF; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl27 { background-color: #D08ACD; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl28 { background-color: #CF86CA; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl29 { background-color: #CD83C8; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl30 { background-color: #CB7FC5; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl31 { background-color: #C87DC4; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl32 { background-color: #C57AC2; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl33 { background-color: #C178C1; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl34 { background-color: #BD76BE; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl35 { background-color: #B974BB; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl36 { background-color: #B471B8; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl37 { background-color: #AF6FB4; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl38 { background-color: #AA6DB1; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl39 { background-color: #A66BAE; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl40 { background-color: #A168AB; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl41 { background-color: #9D66A7; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl42 { background-color: #9864A4; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl43 { background-color: #9462A1; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl44 { background-color: #8F609E; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl45 { background-color: #8B5D9A; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl46 { background-color: #865B97; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl47 { background-color: #825994; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl48 { background-color: #7E5790; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl49 { background-color: #7A558D; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl50 { background-color: #76528A; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl51 { background-color: #715086; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl52 { background-color: #6D4E83; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl53 { background-color: #694C80; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl54 { background-color: #654A7C; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl55 { background-color: #614879; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl56 { background-color: #5E4576; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl57 { background-color: #5A4372; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl58 { background-color: #56416F; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl59 { background-color: #523F6C; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  td.cl60 { background-color: #4F3D68; padding: 5px; border: 0px solid rgb(255,255,255); }
+				  th.empty { background-color: white; }
+				  div.time { transform: rotate(-90deg); display: inline-block; }
+				</style>
+		      </head>
+		      <body>
+			<table class="heatmap">
+				<tbody>
+			   <tr>
+			     <td class="grade0">Grad 0</td>
+			     <td class="grade1">Grad 1</td>
+			     <td class="grade2">Grad 2</td>
+			     <td class="grade3" style="color: white;">Grad 3</td>
+			     <td class="gradeA0">Keine Bewegung</td>
+			     <td class="gradeA1">Bewegung</td>
+			     <td class="gradeM0">Keine Bedarfs-Medikation</td>
+			     <td class="gradeM1" style="color: white;">Bedarfs-Medikation</td>
+			     <td class="visit" style="color: white;">Arzttermin</td>
+			     <td class="medupdate" style="color: white;">Änderung der Medikation</td>
+			     <td class="gradeundefined">Undefiniert</td>
+			   </tr>
+			   </tbody>
+			</table>
+			<table class="heatmap">
+		      <tbody>
+				<tr>
+
+			<th>Allgemeinbefinden</th>
+			<td class="grade2" title="2"></td>
+			<td class="gap"></td>
+			<td class="grade1" title="1"></td>
+			<td class="grade1" title="1"></td>
+			<td class="gap"></td>
+			<td class="grade0" title="0"></td>
+			<td class="grade2" title="2"></td>
+			<td class="grade1" title="1"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="grade2" title="2"></td>
+			<td class="grade2" title="2"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Diarrhö</th>
+			<td class="grade0" title="0"></td>
+			<td class="gap"></td>
+			<td class="grade2" title="2"></td>
+			<td class="grade0" title="0"></td>
+			<td class="gap"></td>
+			<td class="grade1" title="1"></td>
+			<td class="grade3" title="3"></td>
+			<td class="grade1" title="1"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="grade0" title="0"></td>
+			<td class="grade1" title="1"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Erbrechen</th>
+			<td class="grade3" title="3"></td>
+			<td class="gap"></td>
+			<td class="grade2" title="2"></td>
+			<td class="grade2" title="2"></td>
+			<td class="gap"></td>
+			<td class="grade0" title="0"></td>
+			<td class="grade3" title="3"></td>
+			<td class="grade0" title="0"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="grade2" title="2"></td>
+			<td class="grade2" title="2"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Schmerzen</th>
+			<td class="grade2" title="2"></td>
+			<td class="gap"></td>
+			<td class="grade1" title="1"></td>
+			<td class="grade0" title="0"></td>
+			<td class="gap"></td>
+			<td class="grade0" title="0"></td>
+			<td class="grade3" title="3"></td>
+			<td class="grade2" title="2"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="grade1" title="1"></td>
+			<td class="grade1" title="1"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Mukositis Oral</th>
+			<td class="grade1" title="1"></td>
+			<td class="gap"></td>
+			<td class="grade1" title="1"></td>
+			<td class="grade3" title="3"></td>
+			<td class="gap"></td>
+			<td class="grade0" title="0"></td>
+			<td class="grade0" title="0"></td>
+			<td class="grade2" title="2"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="grade3" title="3"></td>
+			<td class="grade1" title="1"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Nahrungsaufnahme</th>
+			<td class="grade2" title="2"></td>
+			<td class="gap"></td>
+			<td class="grade0" title="0"></td>
+			<td class="grade2" title="2"></td>
+			<td class="gap"></td>
+			<td class="grade0" title="0"></td>
+			<td class="grade2" title="2"></td>
+			<td class="grade1" title="1"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="grade3" title="3"></td>
+			<td class="grade2" title="2"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>PNP</th>
+			<td class="grade3" title="3"></td>
+			<td class="gap"></td>
+			<td class="grade1" title="1"></td>
+			<td class="grade0" title="0"></td>
+			<td class="gap"></td>
+			<td class="grade1" title="1"></td>
+			<td class="grade3" title="3"></td>
+			<td class="grade1" title="1"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="grade3" title="3"></td>
+			<td class="grade2" title="2"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Gewichtsverlust bzgl. erstem Arzttermin</th>
+			<td class="grade0" title="0"></td>
+			<td class="gap"></td>
+			<td class="grade0" title="0"></td>
+			<td class="grade0" title="0"></td>
+			<td class="gap"></td>
+			<td class="grade0" title="0"></td>
+			<td class="grade0" title="0"></td>
+			<td class="grade0" title="0"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="grade0" title="0"></td>
+			<td class="grade0" title="0"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Gewichtsverlust bzgl. letztem Arzttermin</th>
+			<td class="grade0" title="0"></td>
+			<td class="gap"></td>
+			<td class="grade0" title="0"></td>
+			<td class="grade0" title="0"></td>
+			<td class="gap"></td>
+			<td class="grade0" title="0"></td>
+			<td class="grade0" title="0"></td>
+			<td class="grade0" title="0"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="grade0" title="0"></td>
+			<td class="grade0" title="0"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Müdigkeit</th>
+			<td class="grade0" title="0"></td>
+			<td class="gap"></td>
+			<td class="grade2" title="2"></td>
+			<td class="grade0" title="0"></td>
+			<td class="gap"></td>
+			<td class="grade0" title="0"></td>
+			<td class="grade3" title="3"></td>
+			<td class="grade0" title="0"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="grade2" title="2"></td>
+			<td class="grade1" title="1"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Bewegung</th>
+			<td class="gradeA1" title="1"></td>
+			<td class="gap"></td>
+			<td class="gradeA1" title="1"></td>
+			<td class="gradeA0" title="0"></td>
+			<td class="gap"></td>
+			<td class="gradeA1" title="1"></td>
+			<td class="gradeA0" title="0"></td>
+			<td class="gradeA0" title="0"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="gradeA0" title="0"></td>
+			<td class="gradeA1" title="1"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Bedarfsmedikation</th>
+			<td class="gradeM0" title="0"></td>
+			<td class="gap"></td>
+			<td class="gradeM0" title="0"></td>
+			<td class="gradeM0" title="0"></td>
+			<td class="gap"></td>
+			<td class="gradeM0" title="0"></td>
+			<td class="gradeM0" title="0"></td>
+			<td class="gradeM0" title="0"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="gradeM1" title="1"></td>
+			<td class="gradeM0" title="0"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Bluthochdruck</th>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gap"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gap"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="grade1" title="1"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="grade3" title="3"></td>
+			<td class="grade3" title="3"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Hautausschlag</th>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gap"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gap"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="grade0" title="0"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="grade0" title="0"></td>
+			<td class="grade1" title="1"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Gelbfärbung der Augen</th>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gap"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gap"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="grade0" title="0"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="grade1" title="1"></td>
+			<td class="grade0" title="0"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Sehstörungen</th>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gap"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gap"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="grade1" title="1"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="grade1" title="1"></td>
+			<td class="grade1" title="1"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Muskelschmerzen</th>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gap"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gap"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="grade1" title="1"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="grade1" title="1"></td>
+			<td class="grade0" title="0"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Gelenkschmerzen</th>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gap"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gap"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="grade0" title="0"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="grade1" title="1"></td>
+			<td class="grade1" title="1"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Atemnot</th>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gap"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gap"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="grade0" title="0"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="grade1" title="1"></td>
+			<td class="grade1" title="1"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Körperliche Belastbarkeit</th>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gap"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gap"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="grade1" title="1"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="grade1" title="1"></td>
+			<td class="grade1" title="1"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Puls</th>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gap"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gap"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="gradeundefined" title="undefined"></td>
+			<td class="cl47" title="238"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="cl43" title="216"></td>
+			<td class="cl14" title="70"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th>Gewicht</th>
+			<td class="cl14" title="70.4"></td>
+			<td class="gap"></td>
+			<td class="cl14" title="74.4"></td>
+			<td class="cl14" title="74.4"></td>
+			<td class="gap"></td>
+			<td class="cl14" title="74.4"></td>
+			<td class="cl15" title="78.4"></td>
+			<td class="cl16" title="82.4"></td>
+			<td class="medupdate" title="Änderung der Medikation"></td>
+			<td class="cl16" title="82.4"></td>
+			<td class="cl14" title="74.4"></td>
+			<td class="gap"></td>
+			<td class="visit" title="Arzttermin"></td>
+			</tr>
+
+			<tr>
+
+			<th class="empty"></th>
+			<td class="time odd" title="Wed Jan 01 2020 10:06:33 GMT+0100 (Central European Standard Time)
+			 "><div class="time">10:06</div></td>
+			<td class="gap" title=""></td>
+			<td class="time even" title="Fri Jan 03 2020 12:40:01 GMT+0100 (Central European Standard Time)
+			kondukteur gewohnheitsrecht herabhängende studierendenzahlen unbedingt fremdenhass "><div class="time">12:40</div></td>
+			<td class="time odd" title="Sat Jan 04 2020 22:38:12 GMT+0100 (Central European Standard Time)
+			 "><div class="time">22:38</div></td>
+			<td class="gap" title=""></td>
+			<td class="time even" title="Mon Jan 06 2020 21:54:32 GMT+0100 (Central European Standard Time)
+			verflatterten charakterstärke sagbar schwieriger entfallen gabriela tauglicher weitreichende heiterkeit reiter gedrohte "><div class="time">21:54</div></td>
+			<td class="time odd" title="Tue Jan 07 2020 09:53:27 GMT+0100 (Central European Standard Time)
+			knappheit "><div class="time">09:53</div></td>
+			<td class="time even" title="Wed Jan 08 2020 01:27:38 GMT+0100 (Central European Standard Time)
+			achteinhalb angenehmen landratsamtes "><div class="time">01:27</div></td>
+			<td class="time odd" title="Thu Jan 09 2020 11:11:23 GMT+0100 (Central European Standard Time)
+			undefined"><div class="time">11:11</div></td>
+			<td class="time odd" title="Thu Jan 09 2020 14:06:19 GMT+0100 (Central European Standard Time)
+			 "><div class="time">14:06</div></td>
+			<td class="time even" title="Fri Jan 10 2020 22:15:33 GMT+0100 (Central European Standard Time)
+			konsultationsverfahren weiter schläfst teebi neuem milben "><div class="time">22:15</div></td>
+			<td class="gap" title=""></td>
+			<td class="time odd" title="Mon Jul 06 2020 10:24:54 GMT+0200 (Central European Summer Time)
+			undefined"><div class="time">10:24</div></td>
+			</tr>
+
+			<tr>
+
+			<th class="empty"></th>
+			<td class="day odd" colspan="1">1</td>
+			<td class="gapday even" colspan="2">3</td>
+			<td class="day odd" colspan="1">4</td>
+			<td class="gapday even" colspan="2">6</td>
+			<td class="day odd" colspan="1">7</td>
+			<td class="day even" colspan="1">8</td>
+			<td class="day odd" colspan="2">9</td>
+			<td class="day even" colspan="1">10</td>
+			<td class="gapday odd" colspan="2">6</td>
+			</tr>
+
+			<tr>
+
+			<th class="empty"></th>
+			<td class="month odd" style="" colspan="11" title="Januar">Januar</td>
+			<td class="month even" style="" colspan="2" title="Juli">Juli</td>
+			</tr>
+
+			<tr>
+
+			<th class="empty"></th>
+			<td colspan="13" title="2020">2020</td>
+			</tr>
+		</tbody>
+			</table>
+			<table class="heatmap">
+			  <tr>
+			  <th style="background-color: white;">Zahlenwerte 0-300 (Puls, Gewicht): </th>
+			  <td class="cl0" title="0-4"> </td>
+			  <td class="cl1" title="5-9"> </td>
+			  <td class="cl2" title="10-14"> </td>
+			  <td class="cl3" title="15-19"> </td>
+			  <td class="cl4" title="20-24"> </td>
+			  <td class="cl5" title="25-29"> </td>
+			  <td class="cl6" title="30-34"> </td>
+			  <td class="cl7" title="35-39"> </td>
+			  <td class="cl8" title="40-44"> </td>
+			  <td class="cl9" title="45-49"> </td>
+			  <td class="cl10" title="50-54"> </td>
+			  <td class="cl11" title="55-59"> </td>
+			  <td class="cl12" title="60-64"> </td>
+			  <td class="cl13" title="65-69"> </td>
+			  <td class="cl14" title="70-74"> </td>
+			  <td class="cl15" title="75-79"> </td>
+			  <td class="cl16" title="80-84"> </td>
+			  <td class="cl17" title="85-89"> </td>
+			  <td class="cl18" title="90-94"> </td>
+			  <td class="cl19" title="95-99"> </td>
+			  <td class="cl20" title="100-104"> </td>
+			  <td class="cl21" title="105-109"> </td>
+			  <td class="cl22" title="110-114"> </td>
+			  <td class="cl23" title="115-119"> </td>
+			  <td class="cl24" title="120-124"> </td>
+			  <td class="cl25" title="125-129"> </td>
+			  <td class="cl26" title="130-134"> </td>
+			  <td class="cl27" title="135-139"> </td>
+			  <td class="cl28" title="140-144"> </td>
+			  <td class="cl29" title="145-149"> </td>
+			  <td class="cl30" title="150-154"> </td>
+			  <td class="cl31" title="155-159"> </td>
+			  <td class="cl32" title="160-164"> </td>
+			  <td class="cl33" title="165-169"> </td>
+			  <td class="cl34" title="170-174"> </td>
+			  <td class="cl35" title="175-179"> </td>
+			  <td class="cl36" title="180-184"> </td>
+			  <td class="cl37" title="185-189"> </td>
+			  <td class="cl38" title="190-194"> </td>
+			  <td class="cl39" title="195-199"> </td>
+			  <td class="cl40" title="200-204"> </td>
+			  <td class="cl41" title="205-209"> </td>
+			  <td class="cl42" title="210-214"> </td>
+			  <td class="cl43" title="215-219"> </td>
+			  <td class="cl44" title="220-224"> </td>
+			  <td class="cl45" title="225-229"> </td>
+			  <td class="cl46" title="230-234"> </td>
+			  <td class="cl47" title="235-239"> </td>
+			  <td class="cl48" title="240-244"> </td>
+			  <td class="cl49" title="245-249"> </td>
+			  <td class="cl50" title="250-254"> </td>
+			  <td class="cl51" title="255-259"> </td>
+			  <td class="cl52" title="260-264"> </td>
+			  <td class="cl53" title="265-269"> </td>
+			  <td class="cl54" title="270-274"> </td>
+			  <td class="cl55" title="275-279"> </td>
+			  <td class="cl56" title="280-284"> </td>
+			  <td class="cl57" title="285-289"> </td>
+			  <td class="cl58" title="290-294"> </td>
+			  <td class="cl59" title="295-299"> </td>
+			  <td class="cl60" title="300"> </td>
+			</tr>
+			  </table>
+		  <p style="margin: 0.5em;">Zeiträume ohne Tagebuch-Einträge sind durch einen vergrösserten Spalten-Abstand markiert und der auf die Lücke folgende Tag ist durch rote Schriftfarbe markiert.</p>
+		    </body>-->
+		</div>
+		
+
+            </div>
+        </div>
+<!--
+        <section id="db-status-bar-visualisation">
+            <div class="page_footer">
+                <label class="footer_label">Datenbank Status: </label><input type="text" id="db-status-visualisation"
+                    readOnly=true placeholder="..." class="footer_text_input">
+            </div>
+        </section>
+-->
+	 <script>
+            require(path.resolve(__dirname,"renderer-process/patients/heatmap"));
+        </script>
+
+    </section>
+
+
+</template>

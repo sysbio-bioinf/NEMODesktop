@@ -1,0 +1,52 @@
+/* Custom Properties */
+
+:root {
+  --color: hsl(0, 0%, 22%);
+  --color-subtle: hsl(0, 0%, 44%);
+  --color-strong: hsl(0, 0%, 11%);
+  --color-link: hsl(0, 0%, 22%);
+
+  --color-border: hsl(0, 0%, 88%);
+  --color-bg: hsl(233, 33%, 95%);
+
+  --color-accent: black; /* Fallback */
+}
+
+/* Category Colors */
+
+/* .u-category-windows       { --color-accent: hsl(116, 30%, 36%); } */
+.u-category-patients {
+  --color-accent: hsl(194, 60%, 36%);
+}
+/* .u-category-native-ui     { --color-accent: hsl(222, 53%, 50%); } */
+/* .u-category-communication { --color-accent: hsl(285, 47%, 46%); } */
+.u-category-system {
+  --color-accent: hsl(36, 77%, 34%);
+  /* --color-accent: hsl(330, 65%, 48%); */
+}
+/* .u-category-media      { --color-accent: hsl( 36, 77%, 34%); } */
+
+.video-box {
+  width: 80%;
+  height: 400px;
+  overflow: hidden;
+  padding: 10px;
+  border: 2px solid gray;
+  margin: 0;
+}
+
+.video-boxr video {
+  /* Make video to at least 100% wide and tall */
+  min-width: 100%; 
+  min-height: 100%; 
+
+  /* Setting width & height to auto prevents the browser from stretching or squishing the video 
+  width: auto;
+  height: auto;*/
+
+  /* Center the video */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}

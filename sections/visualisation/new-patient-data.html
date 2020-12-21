@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <h1>Patienten-Daten:</h1>
+    </head>
+    <body>
+        <section id="dataform">
+            <fieldset>
+                <legend>
+                    Personal Information:
+                </legend>
+                <label>ID:</label> <input type="text" name="identification" id="pid" readOnly=true> <br>
+                <label>Vorname:</label> <input type="text" name="firstname" id="fname" readOnly=true> <br>
+                <label>Nachname:</label> <input type="text" name="lastname" id="lname" readOnly=true> <br>
+                <label>Geburtsdatum:</label> <input type="text" name="birthdate" id="bdate" readOnly=true> <br>
+            </fieldset>
+            
+            <fieldset>
+                <legend>
+                    Eingabe:
+                </legend>
+                <label>Datum:</label><input type="date" name="input-date-picker" id="input-date"><br>
+                <label>Wellness:</label> <select id='wellness' > <option>0</option> <option>1</option> <option>2</option> <option>3</option></select> <br>
+                <label>Diarrhoe:</label> <select id='diarrhoe' > <option>0</option> <option>1</option> <option>2</option> <option>3</option></select> <br>
+                <label>Erbrechen:</label> <select id='erbrechen' > <option>0</option> <option>1</option> <option>2</option> <option>3</option></select> <br>
+                <label>Schmerzen:</label> <select id='schmerzen' > <option>0</option> <option>1</option> <option>2</option> <option>3</option></select><br>
+                <label>Mukositis Oral:</label> <select id='mukositis' > <option>0</option> <option>1</option> <option>2</option> <option>3</option></select> <br>
+                <label>Übelkeit:</label> <select id='uebelkeit' > <option>0</option> <option>1</option> <option>2</option> <option>3</option></select><br>
+                <label>Sport:</label> <select id='sport' > <option>0</option> <option>1</option> <option>2</option></select> <br>
+                <label>Gewicht:</label> <input type="text" name= "patient-gewicht" id='gewicht' ><br> 
+                <label>Kommentare: </label> <input type="text" name="patient-comments" id="comments" > 
+            </fieldset>
+            
+            <button name="cancel" id="btn_cancel" >Abbrechen</button><button name="submit" id="btn_submit" >Speichern</button>
+            
+        </section>
+
+        <script>
+            require(path.resolve(__dirname,"renderer-process/patients/new-patient-data"));
+        </script>
+        
+    </body>
+</html>

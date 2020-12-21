@@ -1,0 +1,72 @@
+<template class="task-template">
+    <section id="data-visualisation-section" class="section js-section u-category-patients">
+
+        <header class="section-header">
+            <div class="parent">
+                <h1 class="header_title">
+                        <i class="fa fa-eye section-icon" aria-hidden="true"></i>
+                        Datenvisualisierung
+                </h1>
+                <!--<p>Inhalt: Visualisierung der aufgenommenen Daten mittels chart.js</p>-->
+            </div>
+        </header>
+
+        <div class="parent">
+            <div class="isResizableT"> 
+                    <div name="patients-navigation" id="patient-nav" class="data_navigation">
+                            <input type="text" placeholder="Suchen ..." id="patients-search-bar" name="searchbar"
+                                class="page_text_input">
+                            <!--<button hidden="true"><i class="fa fa-search"></i></button><br>-->
+                            <table id="patients-table-navigation" name="patients-table-list-navigation" class="scrolable_table-3">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Vorname</th>
+                                        <th>Nachname</th>
+                                        <th>Geburtsdatum</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table><br>
+                        </div>
+            </div>
+            
+            <div name="main" class='data_visualization'>
+                <h2 id="patient-name">Patient ...</h2>
+                <!-- <input type="text" placeholder="Patient ..." id="patient-name"
+                    name="patientid" readOnly=true class="visualization_text_input">
+                </input> -->
+                <br>
+                
+                <div class="isResizable">
+                    <div name="chart" id="chart-depiction" class="chart_container">
+                        <canvas id="current-chart"></canvas>
+                    </div>
+                </div>
+                <div name="controls" id="chart-controls" class="btn-grp">
+                    <button id='reset-chart' class="page_button">Plot Zurücksetzen</button>
+                    <button id='export-to-pdf' class="page_button">PDF-Export</button> 
+                    <button id='csv-export' class="page_button">CSV-Export</button>
+                    <button id='info-scoring' class="page_button">Scoring-Info</button>
+                    <button id="hide_data" class="page_button">Daten ausblenden</button>
+                    <button id="show_data" class="page_button">Daten einblenden</button>
+                    <label><input type="checkbox" id="data_display" checked=true>Tagesanzeige</label>
+                    <!--<input type="checkbox" id="data_display" checked=true><label>Tagesanzeige</label>-->
+                </div>
+                <br>
+            </div>
+        </div>
+
+        <section id="db-status-bar-visualisation">
+            <div class="page_footer">
+                <label class="footer_label">Datenbank Status: </label><input type="text" id="db-status-visualisation"
+                    readOnly=true placeholder="..." class="footer_text_input">
+            </div>
+        </section>
+
+        <script>
+            require(path.resolve(__dirname,"renderer-process/patients/data-visualisation"));
+        </script>
+
+    </section>
+</template>

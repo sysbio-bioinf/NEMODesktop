@@ -1,0 +1,86 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="../../assets/css/about.css" />
+        <link rel="stylesheet" href="../../assets/css/variables.css" />
+        <link rel="stylesheet" href="../../assets/css/nativize.css" />
+        <link rel="stylesheet" href="../../node_modules/font-awesome/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="../../assets/css/medapp_custom.css" />
+
+        <h1>PDF-Presets</h1>
+        <style>
+                table {
+                  font-family: arial, sans-serif;
+                  border-collapse: collapse;
+                  width: 100%;
+                }
+                
+                td, th {
+                  border: 1px solid #dddddd;
+                  text-align: left;
+                  padding: 8px;
+                }
+        </style>
+    </head>
+    <body>
+        <button id='pdf-preset-close-window' class="page_buttonII">Schließen</button>
+        <center>
+            <select id = "presetSelect">
+                <option value = "### Aktuelle Auswahl ###" selected>### Aktuelle Auswahl ###</option>
+            </select>
+        </center>
+
+        <table id="pdf-preset-table" class="scrolable_table-5" style="width:100%">
+            <tr>
+              <td></td>
+              <td></td> 
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td> 
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td> 
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td> 
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td> 
+              <td></td>
+            </tr>
+	    <tr>
+              <td></td>
+              <td></td> 
+              <td></td>
+            </tr>
+	    <tr>
+              <td></td>
+              <td></td> 
+              <td></td>
+            </tr>
+	    <tr>
+              <td></td>
+              <td></td> 
+              <td></td>
+            </tr>
+          </table>
+
+        <div name="controls" id="pdf-preset-controls" class="btn-grp">
+            <button id='pdf-preset-new-preset' class="page_buttonII">Preset speichern</button> 
+            <button id='pdf-preset-export-pdf' class="page_buttonII">PDF-Export</button>
+            <!--<input type="checkbox" id="data_display" checked=true><label>Tagesanzeige</label>-->
+        </div>
+    </body>
+
+    <script>
+        var path = require('path');
+        require(path.resolve(__dirname,"../../renderer-process/patients/pdf-preset"));
+    </script>
+</html>

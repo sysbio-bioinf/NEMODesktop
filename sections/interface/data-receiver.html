@@ -1,0 +1,32 @@
+<template class="task-template">
+  <section id="data-receiver-section" class="section js-section u-category-patients">
+    <header class="section-header">
+      <div class="parent">
+        <h1 class="header_title">
+          <i class="fa fa-video-camera section-icon" aria-hidden="true"></i> QR
+          Code scannen
+        </h1>
+      </div>
+    </header>
+
+    <div align="center">
+      <button class="page_buttonII" id="button-readQRCode">QR Code scannen</button>
+    </div>
+    <div align="center">
+      Kamera-Auswahl:
+    </div>
+    <div align="center">
+      <select id="camSelect">
+        <option id="camValue" value="0" selected>Kamera-Auswahl</option>
+      </select>
+    </div>
+    
+
+  </section>
+
+  <script>
+    const Scanner = require(path.resolve(__dirname,"assets/scanner"));
+    const Camera = require(path.resolve(__dirname,"assets/camera"));
+    require(path.resolve(__dirname,"renderer-process/media/data-receiver"));
+  </script>
+</template>

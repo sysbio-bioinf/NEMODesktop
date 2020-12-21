@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <h1>Patientenformular</h1>
+        <style>
+                table {
+                  font-family: arial, sans-serif;
+                  border-collapse: collapse;
+                  width: 100%;
+                }
+                
+                td, th {
+                  border: 1px solid #dddddd;
+                  text-align: left;
+                  padding: 8px;
+                }
+                
+        </style>
+    </head>
+    <body>
+        <center>
+                <table>
+                        <tr>
+                            <td>Patienten-ID: </td>
+                            <td id="tid"> </td>
+                        </tr>
+                        <tr>
+                            <td>Vorname: </td>
+                            <td id="tfname"> </td>
+                        </tr>
+                        <tr>
+                            <td>Nachname: </td>
+                            <td id="tlname"> </td>
+                        </tr>
+                        <tr>
+                            <td>Geburtsdatum: </td>
+                            <td id="tbdate"> </td>
+                        </tr>
+                      </table>
+
+                      <canvas id="current-chart-II" width="600" height="450"></canvas>
+                      
+                      <!-- <div class="isResizable">
+                      </div> -->
+        </center>
+        
+    </body>
+
+    <script>
+        var path = require('path');
+        require(path.resolve(__dirname,"../../renderer-process/patients/pdf-export"));
+    </script>
+</html>
