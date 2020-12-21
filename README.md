@@ -23,6 +23,7 @@ Download the binaries for your operating system below:
 
 For macOS, open the dmg and drag & drop the NEMO icon to the Applications folder. The app can then be started by clicking on the NEMO icon.
 
+To run the NEMO desktop app in the Terminal or Windows PowerShell:
 ```bash
 # Installation of Node.js and Electron to run the desktop application:
 $ apt-get install nodejs
