@@ -19,27 +19,25 @@ The tracked records of patients are transmitted via a sequence of QR codes, ther
 ## Installation
 
 Download the binaries for your operating system below:
-TODO
+* [Mac OS X](https://github.com/sysbio-bioinf/NEMODesktop/binaries/NEMO.dmg)
 
+For macOS, open the dmg and drag & drop the NEMO icon to the Applications folder. The app can then be started by clicking on the NEMO icon.
+
+To run the NEMO desktop app in the Terminal or Windows PowerShell:
 ```bash
-# Installation with Ubuntu computer to run the desktop application:
+# Installation of Node.js and Electron to run the desktop application:
 $ apt-get install nodejs
 $ apt-get install npm
 $ npm install electron --save-dev
 
 ## Building
-$ git clone project-repository
-$ cd project-folder
+$ cd NEMODesktop
 # create package.json if necessary
 $ ./create_PackageJson.sh 
 # otherwise run
 $ npm install
-# run electron-rebuild
-./node_modules/.bin/electron-rebuild
 # start electron
 $ npm start
-# For easier developing you can launch the app in fullscreen with DevTools open:
-$ npm run dev
 ```
 
 
