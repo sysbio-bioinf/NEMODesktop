@@ -35,7 +35,7 @@ psubmit.addEventListener('click', async () => {
     var input_state = 1;
 
     tmp = document.getElementById('fname');
-    console.log("trim does this " + tmp.value.trim());
+    //console.log("trim does this " + tmp.value.trim());
     if (!tmp.value.trim()){
       input_state = 0;
       tmp.style.backgroundColor = 'red';
@@ -52,7 +52,7 @@ psubmit.addEventListener('click', async () => {
     }
     
     tmp = document.getElementById('bdate');
-    console.log("trim does this " + tmp.value.trim());
+    //console.log("trim does this " + tmp.value.trim());
     if (!tmp.value.trim()){
       input_state = 0;
       tmp.style.backgroundColor = "red";
@@ -65,7 +65,6 @@ psubmit.addEventListener('click', async () => {
         firstname:fname,
         lastname:lname,
         birthdate:bdate};
-      console.log(new_patient);
         
       ipcRenderer.send('addPatientToDb',new_patient);
     }else{
@@ -88,13 +87,13 @@ const patient_table = document.getElementById("apatients-table-list").getElement
 
 
 function fill_table(patient_list, specific_table) {
-  console.log('status: ' + database.getStatus());
+  //console.log('status: ' + database.getStatus());
   try {
       if (!patient_list) {
-          console.log('The returned list of participants is empty');
-          console.log('updated ' + patient_list.length);
+          //console.log('The returned list of participants is empty');
+          //console.log('updated ' + patient_list.length);
       } else {
-          console.log("Number of patients: " + patient_list.length);
+          //console.log("Number of patients: " + patient_list.length);
           for (var i = 0; i < patient_list.length; i++) {
               //data
               var table_row = specific_table.insertRow(i);
@@ -120,7 +119,7 @@ function init_table_values(specific_table) {
     try {
         if (specific_table !== null) {
             var table_rows_length = specific_table.getElementsByTagName("tr").length;
-            console.log("Number of rows in the table: " + table_rows_length);
+            //console.log("Number of rows in the table: " + table_rows_length);
             r = 0;
             while (table_rows_length != 0) {
                 specific_table.deleteRow(r);
@@ -136,7 +135,7 @@ function delete_table_values() {
   try {
       if (patient_table !== null) {
           var table_rows_length = patient_table.getElementsByTagName("tr").length;
-          console.log("Number of rows in the table: " + table_rows_length);
+          //console.log("Number of rows in the table: " + table_rows_length);
           r = 0;
           while (table_rows_length != 0) {
               patient_table.deleteRow(r);
@@ -160,6 +159,7 @@ ipcRenderer.on('patientAddedConfirm', function(event,arg) {
   tmp.value = "";
   tmp.placeholder = "Text eingeben ...";
   delete_table_values();
+  var patient_list = arg;
   fill_table(patient_list, patient_table);
 });
 
@@ -172,10 +172,10 @@ ipcRenderer.on('patientAddConfirmEdit', function(event,arg) {
 // filter function in table for first/last name fields
 [search_fname, search_lname].forEach(function(element) {
   element.addEventListener('keyup', () => {
-    console.log('Search clicked');
+    //console.log('Search clicked');
     var search_text = element.value.toUpperCase();
     var table_rows = patient_table.getElementsByTagName("tr");
-    console.log('number of table rows: ' + table_rows.length);
+    //console.log('number of table rows: ' + table_rows.length);
     var found = false;
     var counter = 0;
     //Initialising the colors: change this when the css are set.
@@ -257,13 +257,13 @@ window.addEventListener('load', () => {
         var db_status = database.getStatus();
         if (db_status === true) {
             clearInterval(id);
-            console.log("DB erfolgreich geladen!");
+            //console.log("DB erfolgreich geladen!");
             document.getElementById("db-status").value = "DB erfolgreich geladen";
             // ipcRenderer.send("db-loaded");
             // Fill the list of patients in the corresponding table
             patient_list = database.readAllPatients();
             if (patient_list === null) {
-                console.log("No Changes!");
+                //console.log("No Changes!");
             } else {
                 fill_table(patient_list, patient_table);
                 //var next_table = document.getElementById("list-of-patients").getElementsByTagName('TBODY')[0];
@@ -274,7 +274,7 @@ window.addEventListener('load', () => {
             }
             document.getElementById("add-patient-section").style.display = "block";
         } else {
-            console.log("db is still loading!");
+            //console.log("db is still loading!");
             document.getElementById("db-status").value = "DB lädt ..."
             //document.getElementById("db-status-list-patients").value = "db loading ..."
             document.getElementById("db-status-visualisation").value = "DB lädt ..."

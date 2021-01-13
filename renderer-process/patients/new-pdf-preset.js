@@ -3,7 +3,7 @@ const path = require('path');
 const {ipcRenderer} = require('electron');
 const BrowserWindow = electron.remote.BrowserWindow;
 const fs = require('fs');
-const database = require(path.resolve("database"));
+const database = require(path.resolve(__dirname, "../../database"));
 const loki = require("lokijs");
 
 var global_chart_status = [];

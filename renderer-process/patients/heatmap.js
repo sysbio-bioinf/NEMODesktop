@@ -16,13 +16,13 @@ const patient_table_nav = document.getElementById("patients-table-navigationHeat
 const list_button_nav = document.getElementById("open-heatmap-view");
 
 function fill_table(patient_list, specific_table) {
-    console.log('status: ' + database.getStatus());
+    //console.log('status: ' + database.getStatus());
     try {
         if (!patient_list) {
-            console.log('The returned list of participants is empty');
-            console.log('updated ' + patient_list.length);
+            //console.log('The returned list of participants is empty');
+            //console.log('updated ' + patient_list.length);
         } else {
-            console.log("Number of patients: " + patient_list.length);
+            //console.log("Number of patients: " + patient_list.length);
             for (var i = 0; i < patient_list.length; i++) {
                 //data
                 var table_row = specific_table.insertRow(i);
@@ -44,14 +44,14 @@ function fill_table(patient_list, specific_table) {
 }
 
 list_button_nav.addEventListener('click', () => {
-    console.log("updating...");
+    //console.log("updating...");
     //database.databaseInit();
     var tmp = database.readAllPatients();
     if (tmp != null) {
-        console.log('number of patients ' + tmp.length);
+        //console.log('number of patients ' + tmp.length);
         //delete the old values and fill in the new ones
         delete_table_values();
-        console.log("data for navifation panel length " + tmp.length);
+        //console.log("data for navifation panel length " + tmp.length);
         fill_table(tmp, patient_table_nav);
 	
     }
@@ -61,7 +61,7 @@ function delete_table_values() {
     try {
         if (patient_table_nav !== null) {
             var table_rows_length = patient_table_nav.getElementsByTagName("tr").length;
-            console.log("Number of rows in the table: " + table_rows_length);
+            //console.log("Number of rows in the table: " + table_rows_length);
             r = 0;
             while (table_rows_length != 0) {
                 patient_table_nav.deleteRow(r);
@@ -91,10 +91,10 @@ function comment_splitter(comment, line_length) {
 const search_bar = document.getElementById("patients-search-barHeat");
 
 search_bar.addEventListener('keyup', () => {
-    console.log('Search clicked');
+    //console.log('Search clicked');
     var search_text = search_bar.value.toUpperCase();
     var table_rows = patient_table_nav.getElementsByTagName("tr");
-    console.log('number of table rows: ' + table_rows.length);
+    //console.log('number of table rows: ' + table_rows.length);
     var found = false;
     var counter = 0;
     //Initialising the colors: change this when the css are set.
@@ -154,10 +154,10 @@ patient_table_nav.addEventListener('click', async (event) => {
     };
     var heatmap_data = build_heatmap_data(diary_data);
     var heatmap_html = build_heatmap_html(heatmap_data, "full");
-    console.log(heatmap_html);
+    //console.log(heatmap_html);
     heatmap_html = build_heatmap_html(heatmap_data, "last");
     document.getElementById("heatmapTable").innerHTML = heatmap_html;
-    console.log(heatmap_html);
+    //console.log(heatmap_html);
 
 });
 
@@ -209,7 +209,7 @@ function build_heatmap_data(diary_data) {
         const data_types = Object.keys(diary_data);
         for (var i = 0; i < data_types.length; i++) {
             const data_type = data_types[i];
-            console.log("DEBUG: parsing diary data of type " + data_type);
+            //console.log("DEBUG: parsing diary data of type " + data_type);
             const type_data = diary_data[data_type];
             for (var j = 0; j < type_data.length; j++) {
                 const data = type_data[j];
@@ -240,7 +240,7 @@ function build_heatmap_data(diary_data) {
                     heatmap_data[year][month][day] = {};
                 }
                 if (heatmap_data[year][month][day][time]) {
-                    console.log("WARNING: duplicate timestamp '" + timestamp + "' at entry number " + j + " of type " + data_type + " - keeping only last one");
+                    //console.log("WARNING: duplicate timestamp '" + timestamp + "' at entry number " + j + " of type " + data_type + " - keeping only last one");
                 }
                 heatmap_data[year][month][day][time] = data;
                 //if (j==0) { console.log(timestamp); console.log(day,month,year,time); }
@@ -253,15 +253,15 @@ function build_heatmap_data(diary_data) {
         const years = Object.keys(heatmap_data).sort(function(a, b) { return parseInt(a) - parseInt(b) });
         for (var i = 0; i < years.length; i++) {
             const year = years[i];
-            console.log("DEBUG: processing year " + year + "...");
+            //console.log("DEBUG: processing year " + year + "...");
             const months = Object.keys(heatmap_data[year]).sort(function(a, b) { return parseInt(a) - parseInt(b) });
             for (var j = 0; j < months.length; j++) {
                 const month = months[j];
-                console.log("DEBUG:   processing month " + month + "...");
+                //console.log("DEBUG:   processing month " + month + "...");
                 const days = Object.keys(heatmap_data[year][month]).sort(function(a, b) { return parseInt(a) - parseInt(b) });
                 for (var k = 0; k < days.length; k++) {
                     const day = days[k];
-                    console.log("DEBUG:     processing day " + day + "...");
+                    //console.log("DEBUG:     processing day " + day + "...");
                     const times = Object.keys(heatmap_data[year][month][day]).sort();
             
                     for (var l = 0; l < times.length; l++) {
@@ -336,7 +336,7 @@ function build_heatmap_data(diary_data) {
            }
        }
 
-       console.log(heatmap_data);
+       //console.log(heatmap_data);
 
         return heatmap_data;
     }
@@ -523,17 +523,17 @@ function build_heatmap_html(heatmap_data, heatmap_mode) {
     const years = Object.keys(heatmap_data).sort(function(a, b) { return parseInt(a) - parseInt(b) });
     for (var i = 0; i < years.length; i++) {
         const year = years[i];
-        console.log("DEBUG: processing year " + year + "...");
+        //console.log("DEBUG: processing year " + year + "...");
         colspans['year'] = 0;
         const months = Object.keys(heatmap_data[year]).sort(function(a, b) { return parseInt(a) - parseInt(b) });
         for (var j = 0; j < months.length; j++) {
             const month = months[j];
-            console.log("DEBUG:   processing month " + month + "...");
+            //console.log("DEBUG:   processing month " + month + "...");
             colspans['month'] = 0;
             const days = Object.keys(heatmap_data[year][month]).sort(function(a, b) { return parseInt(a) - parseInt(b) });
             for (var k = 0; k < days.length; k++) {
                 const day = days[k];
-                console.log("DEBUG:     processing day " + day + "...");
+                //console.log("DEBUG:     processing day " + day + "...");
                 const all_times = Object.keys(heatmap_data[year][month][day]).sort();
                 var times = all_times;
 
@@ -544,7 +544,7 @@ function build_heatmap_html(heatmap_data, heatmap_mode) {
                     for (var l = 0; l < all_times.length; l++) {
                         const time = all_times[l];
                         const entry = heatmap_data[year][month][day][time];
-                        console.log("DEBUG: month=" + month + "  day=" + day + "  time=" + time + "  l=" + l + "  type=" + entry.data_type);
+                        //console.log("DEBUG: month=" + month + "  day=" + day + "  time=" + time + "  l=" + l + "  type=" + entry.data_type);
                         if (entry.data_type == "entry") {
                             lastEntryIndex = l;
                         } else {
@@ -552,12 +552,12 @@ function build_heatmap_html(heatmap_data, heatmap_mode) {
                         }
                     }
                     if (lastEntryIndex >= 0) {
-                        console.log("DEBUG:   adding lastIndex " + lastEntryIndex);
+                        //console.log("DEBUG:   adding lastIndex " + lastEntryIndex);
                         indexes.push(lastEntryIndex);
                     }
                     const indexesSorted = indexes.sort(function(a, b) { return parseInt(a) - parseInt(b) });
                     for (var l = 0; l < indexesSorted.length; l++) {
-                        console.log("DEBUG:   adding time " + all_times[indexesSorted[l]]);
+                        //console.log("DEBUG:   adding time " + all_times[indexesSorted[l]]);
                         times.push(all_times[indexesSorted[l]]);
                     }
                 }
@@ -902,20 +902,20 @@ window.addEventListener('load', () => {
         var db_status = database.getStatus();
         if (db_status === true) {
             clearInterval(id);
-            console.log("DB erfolgreich geladen!");
+            //console.log("DB erfolgreich geladen!");
             //document.getElementById("db-status").value = "DB erfolgreich geladen";
             // ipcRenderer.send("db-loaded");
             // Fill the list of patients in the corresponding table
             patient_list = database.readAllPatients();
             if (patient_list === null) {
-                console.log("No Changes!");
+                //console.log("No Changes!");
             } else {
                     var tmp = database.readAllPatients();
 		    if (tmp != null) {
-			console.log('number of patients ' + tmp.length);
+			//console.log('number of patients ' + tmp.length);
 			//delete the old values and fill in the new ones
 			delete_table_values();
-			console.log("data for navifation panel length " + tmp.length);
+			//console.log("data for navifation panel length " + tmp.length);
 			fill_table(tmp, patient_table_nav);
 		    }
             }

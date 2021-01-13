@@ -116,7 +116,9 @@ selectList.addEventListener('change', async() => {
     var pdfPreset = pdfPresetsDB[selectList.selectedIndex-1];
     var chart_status = [pdfPreset.general,pdfPreset.dia,pdfPreset.eat,pdfPreset.pain,pdfPreset.oral,
                         pdfPreset.appetite,pdfPreset.activity,pdfPreset.weightloss_beginning,pdfPreset.pnp,
-                        pdfPreset.medication,pdfPreset.visit,pdfPreset.medication_update,pdfPreset.weightloss_last]; //TODO new questions here
+                        pdfPreset.medication,pdfPreset.visit,pdfPreset.medication_update,pdfPreset.weightloss_last,
+                        pdfPreset.fatigue,pdfPreset.hypertension,pdfPreset.eczema,pdfPreset.liver,pdfPreset.vision,
+                        pdfPreset.raceheart,pdfPreset.muscle,pdfPreset.joint,pdfPreset.breath,pdfPreset.exercise]; 
     var legend_names = arg[arg.length-2];
     fillTable(chart_status, legend_names);
     new_preset_button.style.visibility = "hidden";
@@ -130,6 +132,7 @@ close_window_button.addEventListener('click', async () => {
     while(selectList.length > 1) {
       selectList.removeChild(selectList.lastChild);
     }
+    new_preset_button.style.visibility = "visible";
     ipcRenderer.send('hide-pdf-preset-window');
     
 });
@@ -137,5 +140,4 @@ close_window_button.addEventListener('click', async () => {
 const pdf_export_button = document.getElementById("pdf-preset-export-pdf");
 pdf_export_button.addEventListener('click', async () => {
   ipcRenderer.send("pdf-print-window",[global_arg,selectList.selectedIndex]);
-  
 });

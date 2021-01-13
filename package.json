@@ -1,5 +1,5 @@
 {
-  "name": "medapp",
+  "name": "NEMO",
   "keywords": [],
   "author": "",
   "version": "1.0.0",
@@ -30,7 +30,7 @@
     "instascan": "^2.0.0-rc.4",
     "lokijs": "^1.5.8",
     "source-map-support": "^0.5.12",
-    "usb": "^1.6.2",
+    "usb": "^1.6.3",
     "uvc-control": "^1.0.2",
     "visibilityjs": "^2.0.2",
     "webrtc-adapter": "^7.5.0"
@@ -39,7 +39,7 @@
     "electron": "^5.0.6",
     "electron-builder": "^21.0.11",
     "electron-rebuild": "^1.10.1",
-    "electron-webpack": "^2.7.4",
+    "electron-webpack": "^2.8.2",
     "webpack": "~4.35.3"
   }
 }

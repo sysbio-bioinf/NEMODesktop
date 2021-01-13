@@ -117,13 +117,13 @@ var patient_list = null;
 const patient_table = document.getElementById("ppatients-table-list").getElementsByTagName('TBODY')[0];
 const edit_button = document.getElementById("button-edit-patient");
 function fill_table(patient_list, specific_table) {
-    console.log('status: ' + database.getStatus());
+    //console.log('status: ' + database.getStatus());
     try {
         if (!patient_list) {
-            console.log('The returned list of participants is empty');
-            console.log('updated ' + patient_list.length);
+            //console.log('The returned list of participants is empty');
+            //console.log('updated ' + patient_list.length);
         } else {
-            console.log("Number of patients: " + patient_list.length);
+            //console.log("Number of patients: " + patient_list.length);
             for (var i = 0; i < patient_list.length; i++) {
                 //data
                 var table_row = specific_table.insertRow(i);
@@ -148,7 +148,7 @@ function init_table_values(specific_table) {
     try {
         if (specific_table !== null) {
             var table_rows_length = specific_table.getElementsByTagName("tr").length;
-            console.log("Number of rows in the table: " + table_rows_length);
+            //console.log("Number of rows in the table: " + table_rows_length);
             r = 0;
             while (table_rows_length != 0) {
                 specific_table.deleteRow(r);
@@ -164,7 +164,7 @@ function delete_table_values() {
     try {
         if (patient_table !== null) {
             var table_rows_length = patient_table.getElementsByTagName("tr").length;
-            console.log("Number of rows in the table: " + table_rows_length);
+            //console.log("Number of rows in the table: " + table_rows_length);
             r = 0;
             while (table_rows_length != 0) {
                 patient_table.deleteRow(r);
@@ -179,7 +179,7 @@ function delete_table_values() {
 edit_button.addEventListener('click', () => {
     var tmp = database.readAllPatients();
     if (tmp != null) {
-        console.log('number of patients ' + tmp.length);
+        //console.log('number of patients ' + tmp.length);
         //delete the old values and fill in the new ones
         delete_table_values();
         fill_table(tmp, patient_table);
@@ -202,9 +202,9 @@ patient_table.addEventListener('click', (event) => {
 
     var tmp = database.readMedication(pid, pfname, plname);
     if (tmp === null) {
-        console.log("Empty set of medications");
+        //console.log("Empty set of medications");
         var current_date = new Date();
-        console.log("today: " + current_date);
+        //console.log("today: " + current_date);
         var yyyy = current_date.getFullYear();
         var mm = current_date.getMonth() + 1;
         var dd = current_date.getDate();
@@ -222,7 +222,7 @@ patient_table.addEventListener('click', (event) => {
         document.getElementById("pcomment").placeholder = "Text eingeben ...";
     } else {
         var mdate = tmp.mdate;
-        console.log('mdate: ' + mdate);
+        //console.log('mdate: ' + mdate);
         var medication = tmp.medication;
         var notes = tmp.notes;
         document.getElementById("pupdate-date").value = mdate;
@@ -241,7 +241,7 @@ save_edit_button.addEventListener('click', async () => {
     }
     var tmp_entry = {pid: patientId};
     var res = await database.checkForID(tmp_entry); //avoid duplicate IDs
-    if(res) {
+    if(res && (patientId != oldId)) {
         alert("Patienten-ID bereits vorhanden")
         return;
     };
@@ -249,8 +249,6 @@ save_edit_button.addEventListener('click', async () => {
     var bdate = document.getElementById("pbdate").value;
     var bdateSplit = bdate.split(".");
     var bdateString = bdateSplit[2]+"-"+bdateSplit[1]+"-"+bdateSplit[0];
-
-    // TODO ID is to be changed in all entries and medUpdates as well
 
     database.editPatient(patientId,
         document.getElementById("pfname").value,
@@ -295,7 +293,7 @@ save_edit_button.addEventListener('click', async () => {
     //------------------Reload the table to actualise the new data-----------------
     var new_data = database.readAllPatients();
     if (new_data != null) {
-        console.log('number of patients ' + new_data.length);
+        //console.log('number of patients ' + new_data.length);
         //delete the old values and fill in the new ones
         delete_table_values();
         fill_table(new_data, patient_table);
@@ -310,10 +308,10 @@ save_edit_button.addEventListener('click', async () => {
 const search_bar = document.getElementById("psearch-text");
 
 search_bar.addEventListener('keyup', () => {
-    console.log('Search clicked');
+    //console.log('Search clicked');
     var search_text = search_bar.value.toUpperCase();
     var table_rows = patient_table.getElementsByTagName("tr");
-    console.log('number of table rows: ' + table_rows.length);
+    //console.log('number of table rows: ' + table_rows.length);
     var found = false;
     var counter = 0;
     //Initialising the colors: change this when the css are set.
@@ -382,7 +380,7 @@ window.addEventListener('load', () => {
         var db_status = database.getStatus();
         if (db_status === true) {
             clearInterval(id);
-            console.log("db successfully loaded!");
+            //console.log("db successfully loaded!");
             document.getElementById("db-status").value = "DB erfolgreich geladen";
             //document.getElementById("db-status-list-patients").value = "db successfully loaded";
             document.getElementById("db-status-visualisation").value = "DB erfolgreich geladen";
@@ -390,7 +388,7 @@ window.addEventListener('load', () => {
             // Fill the list of patients in the corresponding table
             patient_list = database.readAllPatients();
             if (patient_list === null) {
-                console.log("No Changes!");
+                //console.log("No Changes!");
             } else {
                 fill_table(patient_list, patient_table);
                 //var next_table = document.getElementById("list-of-patients").getElementsByTagName('TBODY')[0];
@@ -403,7 +401,7 @@ window.addEventListener('load', () => {
             //document.getElementById("list-patients-section").style.display = "block";
             document.getElementById("data-visualisation-section").style.display = "block";
         } else {
-            console.log("db is still loading!");
+            //console.log("db is still loading!");
             document.getElementById("db-status").value = "DB lädt ..."
             //document.getElementById("db-status-list-patients").value = "db loading ..."
             document.getElementById("db-status-visualisation").value = "DB lädt ..."

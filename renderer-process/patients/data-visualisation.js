@@ -1,13 +1,14 @@
 //The following functions are used to handle the data corresponding to the patients save in JSON files.
 //-----------------------------------------------------------------------------------------------------
 const electron = require('electron');
+const {dialog} = require("electron").remote;
 const path = require('path');
 const fs = require('fs');
 const chartjs = require('chart.js');
 const database = require(path.resolve(__dirname,"../../database"));
 const loki = require("lokijs");
 const chartjszoom = require('chartjs-plugin-zoom');
-const vizRenderer = require('electron').ipcRenderer
+const vizRenderer = require('electron').ipcRenderer;
 
 var test = null;
 
@@ -2107,9 +2108,11 @@ vizRenderer.on('saveVisitV', (event, arg) => {
 vizRenderer.on('addPatientV', async (event, arg) => {
     var new_patient = arg;
     var prom = await database.addPatientToDB(new_patient);
-    await Promise.all([prom]).then(function (results) {
+    var promII = await database.readAllPatients();
+    await Promise.all([prom,promII]).then(function (results) {
         var argII = results[0];
-        vizRenderer.send('patientAdded', argII);
+        var argIII = results[1];
+        vizRenderer.send('patientAdded', argIII);
     });
 });
 
@@ -2161,16 +2164,16 @@ vizRenderer.on('savePDFPresetV', async (event,arg) => {
                     arg.preset_values[10] == presetsDB[i].visit && 
                     arg.preset_values[11] == presetsDB[i].medication_update && 
                     arg.preset_values[12] == presetsDB[i].weightloss_last && 
-		    arg.preset_values[13] == presetsDB[i].fatigue &&
-		    arg.preset_values[14] == presetsDB[i].hypertension &&
-		    arg.preset_values[15] == presetsDB[i].eczema && 
-		    arg.preset_values[16] == presetsDB[i].liver &&
-		    arg.preset_values[17] == presetsDB[i].vision &&
-		    arg.preset_values[18] == presetsDB[i].raceheart &&
-		    arg.preset_values[19] == presetsDB[i].muscle &&
-		    arg.preset_values[20] == presetsDB[i].joint &&
-		    arg.preset_values[21] == presetsDB[i].breath &&
-		    arg.preset_values[22] == presetsDB[i].exercise) {
+                    arg.preset_values[13] == presetsDB[i].fatigue &&
+                    arg.preset_values[14] == presetsDB[i].hypertension &&
+                    arg.preset_values[15] == presetsDB[i].eczema && 
+                    arg.preset_values[16] == presetsDB[i].liver &&
+                    arg.preset_values[17] == presetsDB[i].vision &&
+                    arg.preset_values[18] == presetsDB[i].raceheart &&
+                    arg.preset_values[19] == presetsDB[i].muscle &&
+                    arg.preset_values[20] == presetsDB[i].joint &&
+                    arg.preset_values[21] == presetsDB[i].breath &&
+                    arg.preset_values[22] == presetsDB[i].exercise) {
                     errorCode = 2;
                     break;
                 }
@@ -2191,16 +2194,16 @@ vizRenderer.on('savePDFPresetV', async (event,arg) => {
                     visit: arg.preset_values[10], //Arzttermin
                     medication_update: arg.preset_values[11], //Änderung der Medikation
                     weightloss_last: arg.preset_values[12], //Gewichtsverlust bzgl. letztem Arzttermin
-		    fatigue: arg.preset_values[13], //Müdigkeit
-		    hypertension: arg.preset_values[14], //Blutdruck
-		    eczema: arg.preset_values[15], //Hautausschlag
-		    liver: arg.preset_values[16], //Gelbfärbung der Augen
-		    vision: arg.preset_values[17], //Sehstörungen
-		    raceheart: arg.preset_values[18], //Puls
-		    muscle: arg.preset_values[19], //Muskelschmerzen
-		    joint: arg.preset_values[20], //Gelenkschmerzen
-		    breath: arg.preset_values[21], //Atemnot
-		    exercise: arg.preset_values[22] //Körperliche Belastung
+                    fatigue: arg.preset_values[13], //Müdigkeit
+                    hypertension: arg.preset_values[14], //Blutdruck
+                    eczema: arg.preset_values[15], //Hautausschlag
+                    liver: arg.preset_values[16], //Gelbfärbung der Augen
+                    vision: arg.preset_values[17], //Sehstörungen
+                    raceheart: arg.preset_values[18], //Puls
+                    muscle: arg.preset_values[19], //Muskelschmerzen
+                    joint: arg.preset_values[20], //Gelenkschmerzen
+                    breath: arg.preset_values[21], //Atemnot
+                    exercise: arg.preset_values[22] //Körperliche Belastung
                 };
                 database.addPDFPreset(new_preset);
             }
@@ -2221,16 +2224,16 @@ vizRenderer.on('savePDFPresetV', async (event,arg) => {
                     visit: arg.preset_values[10], //Arzttermin
                     medication_update: arg.preset_values[11], //Änderung der Medikation
                     weightloss_last: arg.preset_values[12], //Gewichtsverlust bzgl. letztem Arzttermin
-		    fatigue: arg.preset_values[13], //Müdigkeit
-		    hypertension: arg.preset_values[14], //Blutdruck
-		    eczema: arg.preset_values[15], //Hautausschlag
-		    liver: arg.preset_values[16], //Gelbfärbung der Augen
-		    vision: arg.preset_values[17], //Sehstörungen
-		    raceheart: arg.preset_values[18], //Puls
-		    muscle: arg.preset_values[19], //Muskelschmerzen
-		    joint: arg.preset_values[20], //Gelenkschmerzen
-		    breath: arg.preset_values[21], //Atemnot
-		    exercise: arg.preset_values[22] //Körperliche Belastung
+                    fatigue: arg.preset_values[13], //Müdigkeit
+                    hypertension: arg.preset_values[14], //Blutdruck
+                    eczema: arg.preset_values[15], //Hautausschlag
+                    liver: arg.preset_values[16], //Gelbfärbung der Augen
+                    vision: arg.preset_values[17], //Sehstörungen
+                    raceheart: arg.preset_values[18], //Puls
+                    muscle: arg.preset_values[19], //Muskelschmerzen
+                    joint: arg.preset_values[20], //Gelenkschmerzen
+                    breath: arg.preset_values[21], //Atemnot
+                    exercise: arg.preset_values[22] //Körperliche Belastung
             };
             database.addPDFPreset(new_preset);
             vizRenderer.send("confirmNewPDFPreset",0);
@@ -2288,7 +2291,6 @@ export_to_pdf.addEventListener('click', async () => {
         });
         
         await Promise.all([ent, vis, medup, anzeige, pid, pfname, plname, pbdate, chart_status, legend_names, presets]).then(function (results) {
-            //vizRenderer.send('pdf-print-window', results)
             vizRenderer.send('pdf-preset-window',results);
         });
 
@@ -2322,7 +2324,31 @@ csv_export_button.addEventListener('click', () => {
         result.push(tmp);
     }
 
-    pathname = 'patient-list.csv';
+    const configDir =  (electron.app || electron.remote.app).getPath('userData');
+    const csv_path = path.join(configDir,"patienten-liste.csv");
+    
+   /* dialog.showSaveDialog(null, options, (path) => {
+        console.log(path);
+        pathname = path;
+    });*/
+
+    var pathname = dialog.showSaveDialog( {
+        title: "Patientenliste speichern",
+        filters: [ { name:"CSV-Dateien", ext: [ "csv" ] } ], // what kind of files do you want to see when this box is opend
+        defaultPath: csv_path // the default path to save file
+    });
+
+    if ( ! pathname ) {
+        // path is undefined
+        return;
+    }
+    
+    /*
+    fs.writeFile( path , text , ( err , buf ) => {
+        if ( err )
+            return alert("saved");
+        return alert("not saved");
+    });*/
 
     const createCsvWriter = require('csv-writer').createObjectCsvWriter;
     const csvWriter = createCsvWriter({
