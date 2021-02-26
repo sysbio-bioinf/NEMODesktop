@@ -1,0 +1,150 @@
+<template class="task-template">
+  <section id="loginscreen-section" class="section js-section u-category-login">
+
+    <header class="section-header">
+      <div class="parent">
+        <h1 class="section-header">
+          <i class="fa fa-user-plus section-icon" aria-hidden="true"></i>
+            Login
+        </h1>
+      </div>
+    </header>
+
+<div id="loginOnly">
+
+    <div class="demo-wrapper"><p style="font-size:16px">
+      Sie müssen sich <em>einloggen</em> um die App nutzen zu können.
+    </p>
+      <fieldset id="login-ids" class="page_fieldset">
+        <label class="page_label">Benutzername:</label> <input type="text" name="username" id="unameLogin"
+          placeholder="Vorname.Nachname" class="page_text_input" value=""> <br>
+        <label class="page_label">Passwort:</label> <input type="password" name="passwort" id="passwLogin"
+          placeholder="Passwort" class="page_text_input" value=""> <br>
+      </fieldset>
+      <button class="demo-button" id="login-msg">Login</button>
+      <span class="demo-response" id="login-reply"></span>
+    </div>
+</div>
+
+
+<div id="generalUser">
+
+    <div class="demo">
+      <div class="demo-wrapper">
+        <button id="changePassword-demo-toggle" class="js-container-target demo-toggle-button">Passwort ändern
+          <div class="demo-meta u-avoid-clicks">Ändern Sie Ihr Passwort</div>
+        </button>
+        <div class="demo-box">
+          <div class="demo-controls">
+                <fieldset id="changePassword-ids" class="page_fieldset">
+                    <label class="page_label">Altes Passwort:</label> <input type="password" name="passwort" id="passwChangePassword"
+                        placeholder="altes Passwort" class="page_text_input"> <br>
+                    <label class="page_label">Neues Passwort:</label> <input type="password" name="passwort" id="newpasswChangePassword"
+                        placeholder="neues Passwort" class="page_text_input"> <br>
+                </fieldset>
+            <button class="demo-button" id="changePassword-msg">Passwort ändern</button>
+            <span class="demo-response" id="changePassword-reply"></span>
+          </div>
+      </div>
+    </div>
+
+</div>
+
+
+<div id="adminUser">
+
+    <div class="demo-wrapper"><p style="font-size:16px">
+      Als <em>Admin</em> können Sie neue Benutzer anlegen, vergessene Passwörter zurücksetzen und Benutzer löschen.
+    </p></div>
+
+    <div class="demo">
+      <div class="demo-wrapper">
+        <button id="addUser-demo-toggle" class="js-container-target demo-toggle-button">Neuen Benutzer hinzufügen
+          <div class="demo-meta u-avoid-clicks">Nur Admin: Neuen Benutzer anlegen</div>
+        </button>
+        <div class="demo-box">
+          <div class="demo-controls">
+                <fieldset id="createUser-ids" class="page_fieldset">
+                    <label class="page_label">Neuer Benutzername:</label> <input type="text" name="username" id="unameCreateUser"
+                        placeholder="Vorname.Nachname" class="page_text_input"> <br>
+                    <label class="page_label">Passwort:</label> <input type="password" name="passwort" id="passwCreateUser"
+                        placeholder="Passwort" class="page_text_input"> <br>
+                    <input type="checkbox" id="logAdmin" name="adminChecker"> <label for="logAdmin">Admin?</label> <br>
+                </fieldset>
+            <button class="demo-button" id="createUser-msg" >Benutzer erstellen</button>
+            <span class="demo-response" id="createUser-reply"></span>
+          </div>
+      </div>
+    </div>
+
+    <div class="demo">
+      <div class="demo-wrapper">
+        <button id="resetPassword-demo-toggle" class="js-container-target demo-toggle-button">Passwort zurücksetzen
+          <div class="demo-meta u-avoid-clicks">Nur Admin: Zurücksetzen eines Benutzer-Passworts</div>
+        </button>
+        <div class="demo-box">
+          <div class="demo-controls">
+                <fieldset id="resetPassword-ids" class="page_fieldset">
+                    <label class="page_label">Benutzername:</label> <input type="text" name="username" id="unameResetPassword"
+                        placeholder="Vorname.Nachname" class="page_text_input"> <br>
+                    <label class="page_label">Temporäres neues Passwort:</label> <input type="password" name="passwort" id="passwResetPassword"
+                        placeholder="Passwort" class="page_text_input"> <br>
+                </fieldset>
+            <button class="demo-button" id="resetPassword-msg">Passwort zurücksetzen</button>
+            <span class="demo-response" id="resetPassword-reply"></span>
+          </div>
+      </div>
+    </div>
+
+    <div class="demo">
+      <div class="demo-wrapper">
+        <button id="deleteUser-demo-toggle" class="js-container-target demo-toggle-button">Benutzer löschen
+          <div class="demo-meta u-avoid-clicks">Nur Admin: Vorhandenen Benutzer löschen</div>
+        </button>
+        <div class="demo-box">
+          <div class="demo-controls">
+                <fieldset id="deleteUser-ids" class="page_fieldset">
+                    <label class="page_label">Benutzername:</label> <input type="text" name="username" id="unameDeleteUser"
+                        placeholder="Vorname.Nachname" class="page_text_input"> <br>
+                </fieldset>
+            <button class="demo-button" id="deleteUser-msg">Benutzer löschen</button>
+            <span class="demo-response" id="deleteUser-reply"></span>
+          </div>
+      </div>
+    </div>
+
+    <div class="demo">
+      <div class="demo-wrapper">
+        <button id="allUsers-demo-toggle" class="js-container-target demo-toggle-button">Benutzer anzeigen
+          <div class="demo-meta u-avoid-clicks">Nur Admin: Alle Benutezr anzeigen</div>
+        </button>
+        <div class="demo-box">
+          <button class="demo-button" id="loadUsers-msg">Benutzer laden</button>
+          <p></p>
+          <div class="demo-controls">
+          <table id="users-table-list" name="users-table-list" class="scrolable_table_2">
+          <thead>
+            <tr>
+              <th>Benutzername</th>
+              <th>Admin</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table><br>
+          </div>
+      </div>
+    </div>
+
+</div>
+
+    <script>
+      require('./renderer-process/login/login-msg')
+      require('./renderer-process/login/createUser-msg')
+      require('./renderer-process/login/changePassword-msg')
+      require('./renderer-process/login/resetPassword-msg')
+      require('./renderer-process/login/deleteUser-msg')
+      require('./renderer-process/login/showUsers')
+    </script>
+
+  </section>
+</template>

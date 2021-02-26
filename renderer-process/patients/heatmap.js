@@ -7,7 +7,8 @@ const chartjs = require('chart.js');
 const database = require(path.resolve(__dirname,"../../database"));
 const loki = require("lokijs");
 const chartjszoom = require('chartjs-plugin-zoom');
-const vizRenderer = require('electron').ipcRenderer
+const vizRenderer = require('electron').ipcRenderer;
+const remote = require('electron').remote;
 
 var test = null;
 
@@ -19,10 +20,10 @@ function fill_table(patient_list, specific_table) {
     //console.log('status: ' + database.getStatus());
     try {
         if (!patient_list) {
-            //console.log('The returned list of participants is empty');
-            //console.log('updated ' + patient_list.length);
+            console.log('The returned list of participants is empty');
+            console.log('updated ' + patient_list.length);
         } else {
-            //console.log("Number of patients: " + patient_list.length);
+            console.log("Number of patients: " + patient_list.length);
             for (var i = 0; i < patient_list.length; i++) {
                 //data
                 var table_row = specific_table.insertRow(i);
@@ -43,15 +44,15 @@ function fill_table(patient_list, specific_table) {
     }
 }
 
-list_button_nav.addEventListener('click', () => {
-    //console.log("updating...");
+list_button_nav.addEventListener('click', async () => {
+    console.log("updating...");
     //database.databaseInit();
-    var tmp = database.readAllPatients();
+    var tmp = await database.readAllPatients();
     if (tmp != null) {
-        //console.log('number of patients ' + tmp.length);
+        console.log('number of patients ' + tmp.length);
         //delete the old values and fill in the new ones
         delete_table_values();
-        //console.log("data for navifation panel length " + tmp.length);
+        console.log("data for navifation panel length " + tmp.length);
         fill_table(tmp, patient_table_nav);
 	
     }
@@ -61,7 +62,7 @@ function delete_table_values() {
     try {
         if (patient_table_nav !== null) {
             var table_rows_length = patient_table_nav.getElementsByTagName("tr").length;
-            //console.log("Number of rows in the table: " + table_rows_length);
+            console.log("Number of rows in the table: " + table_rows_length);
             r = 0;
             while (table_rows_length != 0) {
                 patient_table_nav.deleteRow(r);
@@ -91,10 +92,10 @@ function comment_splitter(comment, line_length) {
 const search_bar = document.getElementById("patients-search-barHeat");
 
 search_bar.addEventListener('keyup', () => {
-    //console.log('Search clicked');
+    console.log('Search clicked');
     var search_text = search_bar.value.toUpperCase();
     var table_rows = patient_table_nav.getElementsByTagName("tr");
-    //console.log('number of table rows: ' + table_rows.length);
+    console.log('number of table rows: ' + table_rows.length);
     var found = false;
     var counter = 0;
     //Initialising the colors: change this when the css are set.
@@ -153,12 +154,13 @@ patient_table_nav.addEventListener('click', async (event) => {
         medupdate: medup
     };
     var heatmap_data = build_heatmap_data(diary_data);
-    var heatmap_html = build_heatmap_html(heatmap_data, "full");
+    //var heatmap_html = build_heatmap_html(heatmap_data, "full");
     //console.log(heatmap_html);
-    heatmap_html = build_heatmap_html(heatmap_data, "last");
+    var heatmap_html = build_heatmap_html(heatmap_data, "last");
     document.getElementById("heatmapTable").innerHTML = heatmap_html;
     //console.log(heatmap_html);
-
+    resizeHeatmap();
+    changeColorscheme();
 });
 
 var anzeige = document.getElementById("data_display");
@@ -168,7 +170,7 @@ anzeige.addEventListener('click', () => {
         fill_chart(actual_row);
     }
 })
-
+/*
 var hide_data = document.getElementById("hide_data");
 hide_data.addEventListener('click', () => {
     //Daten ausblenden
@@ -200,7 +202,7 @@ show_data.addEventListener('click', () => {
         ci.update();
     });
 })
-
+*/
 
 // Build heatmap data
 function build_heatmap_data(diary_data) {
@@ -214,12 +216,15 @@ function build_heatmap_data(diary_data) {
             for (var j = 0; j < type_data.length; j++) {
                 const data = type_data[j];
                 var timestamp = new Date();
+                data.data_type = data_type;
                 if (data_type == "visit") {
                     timestamp = new Date(data["visit_date"]);
+                    if (!data.regular_visit) {
+                        data.data_type = "visitextra";
+                    }
                 } else {
                     timestamp = new Date(data["idate"]);
                 }
-                data.data_type = data_type;
                 data.timestamp = timestamp;
                 const day = timestamp.getDate();
                 const month = 1 + timestamp.getMonth();
@@ -240,7 +245,7 @@ function build_heatmap_data(diary_data) {
                     heatmap_data[year][month][day] = {};
                 }
                 if (heatmap_data[year][month][day][time]) {
-                    //console.log("WARNING: duplicate timestamp '" + timestamp + "' at entry number " + j + " of type " + data_type + " - keeping only last one");
+                    console.log("WARNING: duplicate timestamp '" + timestamp + "' at entry number " + j + " of type " + data_type + " - keeping only last one");
                 }
                 heatmap_data[year][month][day][time] = data;
                 //if (j==0) { console.log(timestamp); console.log(day,month,year,time); }
@@ -479,18 +484,30 @@ function build_heatmap_html(heatmap_data, heatmap_mode) {
             'type': "grade"
         },
         'visit': {
-            'name': "Arzttermin"
+            'name': "Regulärer Arzttermin"
+        },
+        'visitextra': {
+            'name': "Außerplanmäßiger Arzttermin"
         },
         'medupdate': {
             'name': "Änderung der Medikation"
         }
     };
 
-    const table_start = '<table class="heatmap">\n';
+    const scalingSlider = document.getElementById("scaling");
+    var heatmapSize = 12;
+    if (scalingSlider) {
+      heatmapSize = scalingSlider.value;
+    }
+
+    const table_start = '<table class="heatmap heatmapMain" id="heatmap" style="margin-left: 0em; width: auto;">\n';
+    const header_table_start = '<table class="heatmap heatmapMain" id="heatmap_header" style="display: inline-table; vertical-align: top; margin-right: 0em; width: auto;">\n';
     //const header_table_start = '<table class="heatmap" style="position: fixed; top: 8em; left: 0.5em;">\n';
-    const table_end = '</table>\n';
+    const table_end = '</table>';
     const row_start = '<tr>\n';
     const row_end = '</tr>\n';
+    const div_start = '<div id="heatmap_data" style="display: inline-block; vertical-align: top; width: 500px; overflow-x: auto; margin-eft: 0em;">';
+    const div_end = '</div>\n';
 
     const rows = {
         'time': [row_start, '<th class="empty"></th>'],
@@ -499,13 +516,15 @@ function build_heatmap_html(heatmap_data, heatmap_mode) {
         'year': [row_start, '<th class="empty"></th>']
     };
 
-    const header_rows = {};
+    var header_table = header_table_start;
     for (var i = 0; i < row_keys.length; i++) {
         const row_key = row_keys[i];
         //console.log("DEBUG: row_key=" + row_key);
-        rows[row_key] = [row_start, '<th>' + info[row_key]['name'] + '</th>'];
-        header_rows[row_key] = [row_start, '<th>' + info[row_key]['name'] + '</th>'];
+        rows[row_key] = [row_start, '<th class="spacer">.</th>'];
+        const header_row = [row_start, '<th>' + info[row_key]['name'] + '</th>', row_end];
+        header_table += header_row.join("\n");
     }
+    header_table += table_end;
 
     var cell = "";
     const colspans = {};
@@ -594,7 +613,14 @@ function build_heatmap_html(heatmap_data, heatmap_mode) {
                     for (var m = 0; m < row_keys.length; m++) {
                         const row_key = row_keys[m];
                         var cell_class = info[row_key]['type'] + entry[row_key];
-                        var title = entry[row_key];
+                        var title = info[row_key]['name'] + ": " + entry[row_key];
+                        if (row_key == "activity" || row_key == "medication") {
+                            if (entry[row_key] == 0) {
+                                title = info[row_key]['name'] + ": NEIN";
+                            } else {
+                                title = info[row_key]['name'] + ": JA";
+                            }
+                        }
                         if (entry.data_type != "entry") {
                             cell_class = entry.data_type;
                             title = info[entry.data_type]['name'];
@@ -635,7 +661,7 @@ function build_heatmap_html(heatmap_data, heatmap_mode) {
         bg_class['year'] = toggle_value(bg_class['year']);
     }
 
-    var legend = '<table class="heatmap">\n\
+    var legend = '<table class="heatmap" id="heatmap_legend">\n\
    <tr>\n\
      <td class="grade0">Grad 0</td>\n\
      <td class="grade1">Grad 1</td>\n\
@@ -645,8 +671,9 @@ function build_heatmap_html(heatmap_data, heatmap_mode) {
      <td class="gradeA1">Bewegung</td>\n\
      <td class="gradeM0">Keine Bedarfs-Medikation</td>\n\
      <td class="gradeM1" style="color: white;">Bedarfs-Medikation</td>\n\
-     <td class="visit" style="color: white;">Arzttermin</td>\n\
      <td class="medupdate" style="color: white;">Änderung der Medikation</td>\n\
+     <td class="visit" style="color: white;">Regulärer Arzttermin</td>\n\
+     <td class="visitextra" style="color: white;">Außerplanmäßiger Arzttermin</td>\n\
      <td class="gradeundefined">Undefiniert</td>\n\
    </tr>\n\
 </table>\n\
@@ -728,7 +755,13 @@ function build_heatmap_html(heatmap_data, heatmap_mode) {
         <title>Heatmap</title>\n\
         <meta charset="UTF-8"/>\n\
         <style>\n\
-          table.heatmap {\n\
+          :root {\n\
+          }\n\
+          table.heatmapMain {\n\
+            --heatmapSize: ' + heatmapSize + 'pt;\n\
+          }\n\
+          table.heatmap,table.heatmapcvd {\n\
+            --heatmapSize: ' + heatmapSize + 'pt;\n\
             text-align: center;\n\
             background-color: rgb(240,240,240);\n\
             border-color: black;\n\
@@ -736,27 +769,35 @@ function build_heatmap_html(heatmap_data, heatmap_mode) {
             border-radius: 5px;\n\
             border-spacing: 0px;\n\
             border-collapse: collapse;\n\
-            margin-top: 2em;\n\
-            margin-bottom: 2em;\n\
+            margin-top: 0.8em;\n\
+            margin-bottom: 0.8em;\n\
             margin-left: 0.5em;\n\
-            margin-right: 1.5em;\n\
+            margin-right: 0em;\n\
 	    width: auto;\n\
 	    table-layout: auto;\n\
           }\n\
-	  table.heatmap tbody {\n\
+	  table.heatmap tbody,table.heatmapcvd tbody {\n\
 	    table-layout: auto;\n\
 	  }\n\
-	  table.heatmap tr {\n\
+	  table.heatmap tr,table.heatmapcvd tr {\n\
 	    width: auto;\n\
 	    table-layout: auto;\n\
 	    display: table-row;\n\
 	  }\n\
-          table.heatmap td {\n\
+      table.heatmap td,table.heatmapcvd td {\n\
 	    border: 1px solid rgb(255,255,255);\n\
 	    font-size: 12pt;\n\
 	    width: auto;\n\
 	  }\n\
-          table.heatmap th {\n\
+      table.heatmapMain td {\n\
+	    border: 1px solid rgb(255,255,255);\n\
+	    font-size: var(--heatmapSize);\n\
+	    width: auto;\n\
+	  }\n\
+      table.heatmapMain td div {\n\
+	    font-size: var(--heatmapSize);\n\
+	  }\n\
+          table.heatmap th,table.heatmapcvd th {\n\
 	    border: 1px solid rgb(255,255,255);\n\
 	    padding-left: 5px;\n\
 	    padding-right: 5px;\n\
@@ -764,86 +805,116 @@ function build_heatmap_html(heatmap_data, heatmap_mode) {
 	    font-size: 12pt;\n\
 	    width: auto;\n\
 	  }\n\
-          td.grade0 { background-color: rgb(169,255,76); padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.grade1 { background-color: rgb(255,255,0); padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.grade2 { background-color: rgb(255,165,0); padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.grade3 { background-color: rgb(255,0,0); padding: 5px; border: 0px solid rgb(255,255,255);}\n\
-          td.gradeA1 { background-color: rgb(147,210,79); padding: 5px; border: 0px solid rgb(255,255,255);}\n\
-          td.gradeA0 { background-color: rgb(232,213,123); padding: 5px; border: 0px solid rgb(255,255,255);}\n\
-          td.gradeM0 { background-color: rgb(160,215,255); padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.gradeM1 { background-color: rgb(85,83,255); padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.gradeundefined,td.gradenull { background-color: rgb(180,180,180); padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.visit { background-color: rgb(80,80,80); padding: 5px; border: 0px solid rgb(255,255,255);}\n\
-          td.medupdate { background-color: rgb(128,72,184); padding: 5px; border: 0px solid rgb(255,255,255);}\n\
-          td.time { padding-left: 0px; padding-right: 0px; padding-top: 15px; padding-bottom: 15px; font-size: 80%; }\n\
-          td.even { background-color: rgb(240,240,240); }\n\
-          td.odd { background-color: rgb(220,220,220); }\n\
-          td.day { padding: 2px; padding-top: 4px; }\n\
-          td.month { padding: 2px; padding-top: 4px; }\n\
-          td.gap { min-width: 2px; background-color: rgb(255,255,255); }\n\
-          td.gapday { padding: 2px; padding-top: 4px; color: red; font-weight: bold; }\n\
-          td.cl0 { background-color: #F7EFFA; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl1 { background-color: #F6EBF8; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl2 { background-color: #F4E7F7; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl3 { background-color: #F2E3F6; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl4 { background-color: #F0DFF4; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl5 { background-color: #EFDBF3; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl6 { background-color: #EDD7F1; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl7 { background-color: #ECD4F0; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl8 { background-color: #EAD0EF; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl9 { background-color: #E9CCED; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl10 { background-color: #E7C8EC; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl11 { background-color: #E6C4EA; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl12 { background-color: #E5C0E9; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl13 { background-color: #E3BDE7; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl14 { background-color: #E2B9E6; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl15 { background-color: #E1B5E4; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl16 { background-color: #E0B2E2; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl17 { background-color: #DEAEE1; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl18 { background-color: #DDAADF; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl19 { background-color: #DCA6DE; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl20 { background-color: #DBA3DC; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl21 { background-color: #DA9FDA; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl22 { background-color: #D99CD9; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl23 { background-color: #D798D7; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl24 { background-color: #D594D4; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl25 { background-color: #D491D2; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl26 { background-color: #D28DCF; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl27 { background-color: #D08ACD; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl28 { background-color: #CF86CA; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl29 { background-color: #CD83C8; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl30 { background-color: #CB7FC5; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl31 { background-color: #C87DC4; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl32 { background-color: #C57AC2; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl33 { background-color: #C178C1; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl34 { background-color: #BD76BE; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl35 { background-color: #B974BB; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl36 { background-color: #B471B8; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl37 { background-color: #AF6FB4; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl38 { background-color: #AA6DB1; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl39 { background-color: #A66BAE; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl40 { background-color: #A168AB; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl41 { background-color: #9D66A7; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl42 { background-color: #9864A4; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl43 { background-color: #9462A1; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl44 { background-color: #8F609E; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl45 { background-color: #8B5D9A; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl46 { background-color: #865B97; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl47 { background-color: #825994; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl48 { background-color: #7E5790; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl49 { background-color: #7A558D; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl50 { background-color: #76528A; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl51 { background-color: #715086; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl52 { background-color: #6D4E83; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl53 { background-color: #694C80; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl54 { background-color: #654A7C; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl55 { background-color: #614879; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl56 { background-color: #5E4576; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl57 { background-color: #5A4372; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl58 { background-color: #56416F; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl59 { background-color: #523F6C; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          td.cl60 { background-color: #4F3D68; padding: 5px; border: 0px solid rgb(255,255,255); }\n\
-          th.empty { background-color: white; }\n\
+      table.heatmapMain th {\n\
+	    font-size: var(--heatmapSize);\n\
+	  }\n\
+      table.heatmap th.spacer,table.heatmapcvd th.spacer {\n\
+        color: rgb(240,240,240);\n\
+      }\n\
+      td.grade0 { background-color: rgb(169,255,76); padding: 5px; }\n\
+      td.grade1 { background-color: rgb(255,255,0); padding: 5px; }\n\
+      td.grade2 { background-color: rgb(255,165,0); padding: 5px; }\n\
+      td.grade3 { background-color: rgb(255,0,0); padding: 5px;}\n\
+      td.gradeA1 { background-color: rgb(147,210,79); padding: 5px;}\n\
+      td.gradeA0 { background-color: rgb(232,213,123); padding: 5px;}\n\
+      td.gradeM0 { background-color: rgb(160,215,255); padding: 5px; }\n\
+      td.gradeM1 { background-color: rgb(85,83,255); padding: 5px; }\n\
+      td.gradeundefined,table.heatmap td.gradenull { background-color: rgb(180,180,180); padding: 5px; }\n\
+      td.visit { background-color: rgb(80,80,80); padding: 5px;}\n\
+      td.medupdate { background-color: rgb(128,72,184); padding: 5px;}\n\
+      table.heatmapcvd td.grade0 { background-color: rgb(255,255,180); padding: 5px; }\n\
+      table.heatmapcvd td.grade1 { background-color: rgb(255, 200, 0); padding: 5px; }\n\
+      table.heatmapcvd td.grade2 { background-color: rgb(255,161,0); padding: 5px; }\n\
+      table.heatmapcvd td.grade3 { background-color: rgb(90,75,255); padding: 5px;}\n\
+      table.heatmapcvd td.gradeA1 { background-color: rgb(255,255,40); padding: 5px;}\n\
+      table.heatmapcvd td.gradeA0 { background-color: rgb(145,216,255); padding: 5px;}\n\
+      table.heatmapcvd td.gradeM0 { background-color: rgb(220,220,220); padding: 5px; }\n\
+      table.heatmapcvd td.gradeM1 { background-color: rgb(180,180,180); padding: 5px; }\n\
+      table.heatmapcvd td.gradeundefined,table.heatmapcvd td.gradenull { background-color: rgb(240,240,240); padding: 5px; }\n\
+      table.heatmapcvd td.visit { background-color: rgb(50,50,50); padding: 5px;}\n\
+      table.heatmapcvd td.visitextra { background-color: rgb(0,0,0); padding: 5px;}\n\
+      table.heatmapcvd td.medupdate { background-color: rgb(120,120,120); padding: 5px;}\n\
+      table.heatmap td.grade0 { background-color: rgb(169,255,76); padding: 5px; }\n\
+      table.heatmap td.grade1 { background-color: rgb(255,255,0); padding: 5px; }\n\
+      table.heatmap td.grade2 { background-color: rgb(255,165,0); padding: 5px; }\n\
+      table.heatmap td.grade3 { background-color: rgb(255,0,0); padding: 5px;}\n\
+      table.heatmap td.gradeA1 { background-color: rgb(147,210,79); padding: 5px;}\n\
+      table.heatmap td.gradeA0 { background-color: rgb(232,213,123); padding: 5px;}\n\
+      table.heatmap td.gradeM0 { background-color: rgb(160,215,255); padding: 5px; }\n\
+      table.heatmap td.gradeM1 { background-color: rgb(85,83,255); padding: 5px; }\n\
+      table.heatmap td.gradeundefined,table.heatmap td.gradenull { background-color: rgb(180,180,180); padding: 5px; }\n\
+      table.heatmap td.visit { background-color: rgb(80,80,80); padding: 5px;}\n\
+      table.heatmap td.visitextra { background-color: rgb(40,40,40); padding: 5px;}\n\
+      table.heatmap td.medupdate { background-color: rgb(128,72,184); padding: 5px;}\n\
+      table.heatmap td.time,table.heatmapcvd td.time { padding-left: 0px; padding-right: 0px; padding-top: 15px; padding-bottom: 15px; font-size: 80%; }\n\
+      table.heatmap td.even,table.heatmapcvd td.even { background-color: rgb(240,240,240); }\n\
+      table.heatmap td.odd,table.heatmapcvd td.odd { background-color: rgb(220,220,220); }\n\
+      table.heatmap td.day,table.heatmapcvd td.day { padding: 2px; padding-top: 4px; }\n\
+      table.heatmap td.month,table.heatmapcvd td.month { padding: 2px; padding-top: 4px; }\n\
+      table.heatmap td.gap,table.heatmapcvd td.gap { min-width: 2px; background-color: rgb(255,255,255); }\n\
+      table.heatmap td.gapday,table.heatmapcvd td.gapday { padding: 2px; padding-top: 4px; color: red; font-weight: bold; }\n\
+      table.heatmap td.cl0,table.heatmapcvd td.cl0 { background-color: #F7EFFA; padding: 5px; }\n\
+      table.heatmap td.cl1,table.heatmapcvd td.cl1 { background-color: #F6EBF8; padding: 5px; }\n\
+      table.heatmap td.cl2,table.heatmapcvd td.cl2 { background-color: #F4E7F7; padding: 5px; }\n\
+      table.heatmap td.cl3,table.heatmapcvd td.cl3 { background-color: #F2E3F6; padding: 5px; }\n\
+      table.heatmap td.cl4,table.heatmapcvd td.cl4 { background-color: #F0DFF4; padding: 5px; }\n\
+      table.heatmap td.cl5,table.heatmapcvd td.cl5 { background-color: #EFDBF3; padding: 5px; }\n\
+      table.heatmap td.cl6,table.heatmapcvd td.cl6 { background-color: #EDD7F1; padding: 5px; }\n\
+      table.heatmap td.cl7,table.heatmapcvd td.cl7 { background-color: #ECD4F0; padding: 5px; }\n\
+      table.heatmap td.cl8,table.heatmapcvd td.cl8 { background-color: #EAD0EF; padding: 5px; }\n\
+      table.heatmap td.cl9,table.heatmapcvd td.cl9 { background-color: #E9CCED; padding: 5px; }\n\
+      table.heatmap td.cl10,table.heatmapcvd td.cl10 { background-color: #E7C8EC; padding: 5px; }\n\
+      table.heatmap td.cl11,table.heatmapcvd td.cl11 { background-color: #E6C4EA; padding: 5px; }\n\
+      table.heatmap td.cl12,table.heatmapcvd td.cl12 { background-color: #E5C0E9; padding: 5px; }\n\
+      table.heatmap td.cl13,table.heatmapcvd td.cl13 { background-color: #E3BDE7; padding: 5px; }\n\
+      table.heatmap td.cl14,table.heatmapcvd td.cl14 { background-color: #E2B9E6; padding: 5px; }\n\
+      table.heatmap td.cl15,table.heatmapcvd td.cl15 { background-color: #E1B5E4; padding: 5px; }\n\
+      table.heatmap td.cl16,table.heatmapcvd td.cl16 { background-color: #E0B2E2; padding: 5px; }\n\
+      table.heatmap td.cl17,table.heatmapcvd td.cl17 { background-color: #DEAEE1; padding: 5px; }\n\
+      table.heatmap td.cl18,table.heatmapcvd td.cl18 { background-color: #DDAADF; padding: 5px; }\n\
+      table.heatmap td.cl19,table.heatmapcvd td.cl19 { background-color: #DCA6DE; padding: 5px; }\n\
+      table.heatmap td.cl20,table.heatmapcvd td.cl20 { background-color: #DBA3DC; padding: 5px; }\n\
+      table.heatmap td.cl21,table.heatmapcvd td.cl21 { background-color: #DA9FDA; padding: 5px; }\n\
+      table.heatmap td.cl22,table.heatmapcvd td.cl22 { background-color: #D99CD9; padding: 5px; }\n\
+      table.heatmap td.cl23,table.heatmapcvd td.cl23 { background-color: #D798D7; padding: 5px; }\n\
+      table.heatmap td.cl24,table.heatmapcvd td.cl24 { background-color: #D594D4; padding: 5px; }\n\
+      table.heatmap td.cl25,table.heatmapcvd td.cl25 { background-color: #D491D2; padding: 5px; }\n\
+      table.heatmap td.cl26,table.heatmapcvd td.cl26 { background-color: #D28DCF; padding: 5px; }\n\
+      table.heatmap td.cl27,table.heatmapcvd td.cl27 { background-color: #D08ACD; padding: 5px; }\n\
+      table.heatmap td.cl28,table.heatmapcvd td.cl28 { background-color: #CF86CA; padding: 5px; }\n\
+      table.heatmap td.cl29,table.heatmapcvd td.cl29 { background-color: #CD83C8; padding: 5px; }\n\
+      table.heatmap td.cl30,table.heatmapcvd td.cl30 { background-color: #CB7FC5; padding: 5px; }\n\
+      table.heatmap td.cl31,table.heatmapcvd td.cl31 { background-color: #C87DC4; padding: 5px; }\n\
+      table.heatmap td.cl32,table.heatmapcvd td.cl32 { background-color: #C57AC2; padding: 5px; }\n\
+      table.heatmap td.cl33,table.heatmapcvd td.cl33 { background-color: #C178C1; padding: 5px; }\n\
+      table.heatmap td.cl34,table.heatmapcvd td.cl34 { background-color: #BD76BE; padding: 5px; }\n\
+      table.heatmap td.cl35,table.heatmapcvd td.cl35 { background-color: #B974BB; padding: 5px; }\n\
+      table.heatmap td.cl36,table.heatmapcvd td.cl36 { background-color: #B471B8; padding: 5px; }\n\
+      table.heatmap td.cl37,table.heatmapcvd td.cl37 { background-color: #AF6FB4; padding: 5px; }\n\
+      table.heatmap td.cl38,table.heatmapcvd td.cl38 { background-color: #AA6DB1; padding: 5px; }\n\
+      table.heatmap td.cl39,table.heatmapcvd td.cl39 { background-color: #A66BAE; padding: 5px; }\n\
+      table.heatmap td.cl40,table.heatmapcvd td.cl40 { background-color: #A168AB; padding: 5px; }\n\
+      table.heatmap td.cl41,table.heatmapcvd td.cl41 { background-color: #9D66A7; padding: 5px; }\n\
+      table.heatmap td.cl42,table.heatmapcvd td.cl42 { background-color: #9864A4; padding: 5px; }\n\
+      table.heatmap td.cl43,table.heatmapcvd td.cl43 { background-color: #9462A1; padding: 5px; }\n\
+      table.heatmap td.cl44,table.heatmapcvd td.cl44 { background-color: #8F609E; padding: 5px; }\n\
+      table.heatmap td.cl45,table.heatmapcvd td.cl45 { background-color: #8B5D9A; padding: 5px; }\n\
+      table.heatmap td.cl46,table.heatmapcvd td.cl46 { background-color: #865B97; padding: 5px; }\n\
+      table.heatmap td.cl47,table.heatmapcvd td.cl47 { background-color: #825994; padding: 5px; }\n\
+      table.heatmap td.cl48,table.heatmapcvd td.cl48 { background-color: #7E5790; padding: 5px; }\n\
+      table.heatmap td.cl49,table.heatmapcvd td.cl49 { background-color: #7A558D; padding: 5px; }\n\
+      table.heatmap td.cl50,table.heatmapcvd td.cl50 { background-color: #76528A; padding: 5px; }\n\
+      table.heatmap td.cl51,table.heatmapcvd td.cl51 { background-color: #715086; padding: 5px; }\n\
+      table.heatmap td.cl52,table.heatmapcvd td.cl52 { background-color: #6D4E83; padding: 5px; }\n\
+      table.heatmap td.cl53,table.heatmapcvd td.cl53 { background-color: #694C80; padding: 5px; }\n\
+      table.heatmap td.cl54,table.heatmapcvd td.cl54 { background-color: #654A7C; padding: 5px; }\n\
+      table.heatmap td.cl55,table.heatmapcvd td.cl55 { background-color: #614879; padding: 5px; }\n\
+      table.heatmap td.cl56,table.heatmapcvd td.cl56 { background-color: #5E4576; padding: 5px; }\n\
+      table.heatmap td.cl57,table.heatmapcvd td.cl57 { background-color: #5A4372; padding: 5px; }\n\
+      table.heatmap td.cl58,table.heatmapcvd td.cl58 { background-color: #56416F; padding: 5px; }\n\
+      table.heatmap td.cl59,table.heatmapcvd td.cl59 { background-color: #523F6C; padding: 5px; }\n\
+      table.heatmap td.cl60,table.heatmapcvd td.cl60 { background-color: #4F3D68; padding: 5px; }\n\
+      table.heatmap th.empty,table.heatmapcvd th.empty { background-color: white; }\n\
           div.time { transform: rotate(-90deg); display: inline-block; }\n\
         </style>\n\
       </head>\n\
@@ -861,14 +932,92 @@ function build_heatmap_html(heatmap_data, heatmap_mode) {
     row_keys.push("month");
     row_keys.push("year");
 
-    var page = page_start + legend + table_start;
+    var page = page_start + legend + '<div>' + header_table + div_start + table_start;
     for (var i = 0; i < row_keys.length; i++) {
         const row_key = row_keys[i];
         page += "\n" + rows[row_key].join("\n") + "\n" + row_end;
     }
-    page += "\n" + table_end + legend2 + page_end;
+    page += "\n" + table_end + div_end + div_end + legend2 + page_end;
 
     return page;
+}
+
+function resizeHeatmap(parentWidth) {
+    const heatmapParent = document.getElementById("heatmap-parent");
+    if (heatmapParent) {
+        let cs = window.getComputedStyle(heatmapParent);
+        if (cs) {
+            const parentWidth = parseInt(cs.width);
+            const heatmapHeader = document.getElementById("heatmap_header");
+            if (heatmapHeader) {
+                cs = window.getComputedStyle(heatmapHeader);
+                const headerWidth = parseInt(cs.width);
+                const heatmapData = document.getElementById("heatmap_data");
+                if (heatmapData) {
+                    cs = window.getComputedStyle(heatmapData);
+                    const oldWidth = cs.width;
+                    const defaultWidth = parentWidth - 30;
+                    let dataWidth = defaultWidth + "px";
+                    if (parentWidth > (headerWidth + 230)) {
+                        dataWidth = parentWidth - headerWidth - 30;
+                    }
+                    //console.log("DEBUG: resized heatmap - parentWidth=" + parentWidth + "  headerWidth=" + headerWidth + "  dataWidth=" + dataWidth + "  oldWidth=" + oldWidth);
+                    heatmapData.style.setProperty("width", dataWidth + "px");
+                }
+            }
+        }
+    }
+}
+
+const heatmapScaling = document.getElementById("scaling");
+heatmapScaling.addEventListener('change', (event) => {
+    const size = event.target.value;
+    const heatmap = document.getElementById("heatmap");
+    heatmap.style.setProperty("--heatmapSize", size + "pt");
+    const heatmap_header = document.getElementById("heatmap_header");
+    heatmap_header.style.setProperty("--heatmapSize", size + "pt");
+    resizeHeatmap();
+});
+
+//const heatmapParent = document.getElementById("heatmap-parent");
+window.addEventListener("resize", (event) => {
+    //console.log("DEBUG: window was resized...");
+    heatmapParent = document.getElementById("heatmap-parent");
+    if (heatmapParent) {
+        resizeHeatmap();
+    }
+    //console.log(Object.keys(heatmapParent));
+    //const width = parseInt(cs.width);
+    //console.log("DEBUG: heatmap-parent was resized to width=" + width);
+})
+
+const BrowserWindow = remote.BrowserWindow;
+var colorscheme = document.getElementById("colorscheme");
+if (colorscheme) {
+    colorscheme.addEventListener("change", changeColorscheme );
+} else {
+    console.log("DEBUG: colorscheme selection not defined");
+}
+
+function changeColorscheme() {
+    if (colorscheme) {
+        heatmap = document.getElementById("heatmap");
+        heatmap_legend = document.getElementById("heatmap_legend");
+       if (heatmap) {
+            //console.log(heatmap.classList)
+            if (colorscheme[colorscheme.selectedIndex].value == "cvd") {
+                heatmap.classList.remove("heatmap");
+                heatmap.classList.add("heatmapcvd");
+                heatmap_legend.classList.remove("heatmap");
+                heatmap_legend.classList.add("heatmapcvd");
+            } else {
+                heatmap.classList.remove("heatmapcvd");
+                heatmap.classList.add("heatmap");
+                heatmap_legend.classList.remove("heatmapcvd");
+                heatmap_legend.classList.add("heatmap");
+            }
+        }
+    }
 }
 
 window.addEventListener('load', () => {
@@ -898,24 +1047,24 @@ window.addEventListener('load', () => {
 
     var id = setInterval(checkstatus, 100);
     //document.getElementById("add-patient-section").style.display = "none";
-    function checkstatus() {
+    async function checkstatus() {
         var db_status = database.getStatus();
         if (db_status === true) {
             clearInterval(id);
-            //console.log("DB erfolgreich geladen!");
+            console.log("DB erfolgreich geladen!");
             //document.getElementById("db-status").value = "DB erfolgreich geladen";
             // ipcRenderer.send("db-loaded");
             // Fill the list of patients in the corresponding table
-            patient_list = database.readAllPatients();
+            patient_list = await database.readAllPatients();
             if (patient_list === null) {
-                //console.log("No Changes!");
+                console.log("No Changes!");
             } else {
-                    var tmp = database.readAllPatients();
+                    var tmp = await database.readAllPatients();
 		    if (tmp != null) {
-			//console.log('number of patients ' + tmp.length);
+			console.log('number of patients ' + tmp.length);
 			//delete the old values and fill in the new ones
 			delete_table_values();
-			//console.log("data for navifation panel length " + tmp.length);
+			console.log("data for navifation panel length " + tmp.length);
 			fill_table(tmp, patient_table_nav);
 		    }
             }

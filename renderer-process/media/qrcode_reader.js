@@ -174,14 +174,39 @@ function run_cam(camID){
 						// first check, if patient id is in database. If not, reset window.
 						ipcRenderer.send('checkID',entries[0]);
 						ipcRenderer.once('checkIDconfQR', async function(event,arg) {
-							patientIDinvalid = arg;
-							
+							patientIDinvalid = arg[0];
+							var patient_list = arg[1];
+							var patientId = entries[0].pid;
+
 							if(!patientIDinvalid) {
-								alert("Patienten-ID nicht in Datenbank vorhanden");
-								resetWindow();
-								scanner.stop();
-								ipcRenderer.send('hide-qrwindow', 0);
+								if(/uku[0-9]+/.test(patientId)) {
+									alert("Patienten-ID nicht in Datenbank vorhanden, bitte Patient anlegen");
+									resetWindow();
+									scanner.stop();
+									//ipcRenderer.send('show-new-patient-window');
+									ipcRenderer.send('hide-qrwindow', 0);
+								}
+								else {
+									alert("UUID nicht in Datenbank vorhanden, bitte einem vorhandenen Patienten zuordnen");
+									resetWindow();
+									scanner.stop();
+									//ipcRenderer.send('get-patient-list-to-devices');
+									ipcRenderer.send('show-device-window',[patientId,patient_list]);
+								}
 							}else {
+								var db_pid;
+								if(/uku[0-9]+/.test(patientId)) {
+									db_pid = entries[0].pid;
+								}else {
+									db_pid = arg[2];
+									db_pid = db_pid[0].pid;
+									console.log(db_pid);
+								}
+
+								for(var idx = 0; idx < entries.length;idx++) {
+									entries[idx].pid = db_pid;
+								}
+
 								//minimum 1 entry has to be included in QR Code, get PID to check if it is valid
 								//this creates a chain of events between data-visualisation.js and main.js to add new entries to DB, old ones not
 								//in the end, a confirmation is sent to this window  
@@ -209,7 +234,8 @@ function run_cam(camID){
 										regular_visit = 1;
 									}
 									var visit_date = Date(Date.now());
-									var new_visit = {pid:entries[0].pid,
+									var new_visit = {pid:db_pid,
+													//pid:entries[0].pid,
 													visit_date:visit_date,
 													regular_visit:regular_visit
 									};

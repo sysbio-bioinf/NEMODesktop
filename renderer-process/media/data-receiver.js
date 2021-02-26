@@ -28,5 +28,9 @@ Camera.getCameras()
 const button_readQRCode = document.getElementById("button-readQRCode");
 button_readQRCode.addEventListener('click', () => {
     var arg = select.selectedIndex;
-    ipcRenderer.send('start-qrcode-reader',arg);
-})
+    if(select[arg].innerHTML == "Kamera-Auswahl") {
+        alert("Keine Kamera ausgewählt");
+    }else {
+        ipcRenderer.send('start-qrcode-reader',arg);
+    }
+});

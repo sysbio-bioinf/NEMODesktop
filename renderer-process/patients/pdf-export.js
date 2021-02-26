@@ -284,9 +284,9 @@ ipcRenderer.on('pdf-data-print', async (event,argII) => {
                     });
                 } else {
                     if (tmp_visit[idx].regular_visit == 0) {
-                        regular_visit[i] = "Ungewöhnlicher Arzttermin";
+                        regular_visit[i] = "Außerplanmäßiger Termin";
                     } else {
-                        regular_visit[i] = "Gewöhnlicher Arzttermin";
+                        regular_visit[i] = "Regulärer Termin";
                     }
                     visit_date_data.push({
                         x: all_dates[i],

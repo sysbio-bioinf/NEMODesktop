@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="../../assets/css/about.css" />
+        <link rel="stylesheet" href="../../assets/css/variables.css" />
+        <link rel="stylesheet" href="../../assets/css/nativize.css" />
+        <link rel="stylesheet" href="../../node_modules/font-awesome/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="../../assets/css/medapp_custom.css" />
+    </head>
+    
+    <body>
+        <h2>Zuordnung der ID zu Patienten</h2>
+                <input type="text" placeholder="Suchen ..." id="patients-search-bar-device" name="searchbar"
+                        class="page_text_input"><br>
+                <table class="scrolable_table-6" id="apatients-table-list-device" name="apatients-table-list-device">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Vorname</th>
+                            <th>Nachname</th>
+                            <th>Geburtsdatum</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table><br>
+
+            <h2 id="patient-name-device">Patient: ...</h2>
+           
+            <button id='device-list-close-window' class="page_buttonII">Schließen</button>
+            <button id='save-device' class="page_buttonII">Zuordnen</button>
+            <!--<button id='new-patient-device' class='page_buttonII'>Neuer Patient</button>-->
+           
+    </body>
+
+    <script>
+        const path = require('path');
+        require(path.resolve(__dirname,"../../renderer-process/patients/device-patient-table"));
+    </script>
+</html>

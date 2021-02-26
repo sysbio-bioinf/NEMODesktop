@@ -26,6 +26,7 @@
   <link rel="import" href="sections/system/app-sys-information.html" /> -->
 
   <link rel="import" href="sections/about.html" />
+  <link rel="import" href="sections/firstUser.html" />
   <link rel="import" href="sections/patients/add-patient.html" />
   <link rel="import" href="sections/patients/edit-patient.html" />
   <!--<link rel="import" href="sections/patients/pseudonym.html" />-->
@@ -36,6 +37,7 @@
   <link rel="import" href="sections/visualisation/data-visualisation.html" />
   <link rel="import" href="sections/visualisation/heatmap_tmp.html" />
   <!--<link rel="import" href="sections/visualisation/new-patient-form.html" />-->
+  <link rel="import" href="sections/login/loginscreen.html">
 </head>
 
 <body>
@@ -53,6 +55,18 @@
       
     </header>
 
+    <div class="nav-item u-category-login">
+      <h3 class="nav-category">
+        <i class="fa fa-hospital-o nav-icon"></i> <strong>Benutzer-Management</strong>
+      </h3>
+      <button type="button" id="button-loginscreen" data-section="loginscreen" class="nav-button">
+        <i class="fa fa-user-plus nav-icon"></i> Alle Benutzer
+      </button>
+      <button type="button" id="button-logout" class="nav-button">
+        <i class="fa fa-user-plus nav-icon"></i> Ausloggen
+      </button>
+    </div>
+
     <div class="nav-item u-category-patients">
       <h3 class="nav-category">
         <i class="fa fa-hospital-o nav-icon"></i> <strong>Patienten</strong>
@@ -63,12 +77,6 @@
       <button type="button" id="button-edit-patient" data-section="edit-patient" class="nav-button">
         <i class="fa fa-pencil nav-icon"></i> Patientendaten bearbeiten
       </button> 
-      <!--<button type="button" id="button-pseudonym" data-section="pseudonym" class="nav-button">
-        <i class="fa fa-key nav-icon"></i> Pseudonymisierung
-      </button>
-      <button type="button" id="button-list-patients" data-section="list-patients" class="nav-button">
-        <i class="fa fa-users nav-icon"></i> Patientenliste
-      </button>-->
     </div>
 
     <div class="nav-item u-category-interface">
@@ -112,7 +120,7 @@
     <footer class="nav-footer">
       <button type="button" id="button-about" data-modal="about" class="nav-footer-button">Über die Anwendung NEMO</button>
       <p>
-        © 2020
+        © 2020, 2021
         <a class="nav-footer-logo" href="http://uni-ulm.de" aria-label="Homepage">
           NEMO.
         </a> Alle Rechte vorbehalten.</p>

@@ -1,0 +1,33 @@
+<template class="task-template">
+  <div id="firstUser-modal" class="about modal">
+    <div class="about-wrapper">
+      <header class="about-header">
+        <img class="about-logo" src="assets/img/ZIVlogo2Coltransparent.png" srcset="assets/img/ZIVlogo2Coltransparent.png 1x, assets/img/ZIVlogo2Coltransparent.png 2x"
+          alt="App Demo NEMO">
+      </header>
+      <main class="about-sections">
+        <section class="about-section play-along">
+          <h2>Ersten Benutzer erstellen</h2>
+          
+          <p>Ein Admin-Benutzer muss erst erstellt werden, bevor die App benutzt werden kann und andere Benutzer angelegt werden können.<br /><br />
+              <fieldset id="firstUser-ids" class="page_fieldset">
+                  <label class="page_label">Benutzername:</label> <input type="text" name="username" id="unameFirstUser"
+                      placeholder="Vorname.Nachname" class="page_text_input" value=""> <br>
+                  <label class="page_label">Passwort:</label> <input type="text" name="passwort" id="passwFirstUser"
+                      placeholder="Passwort" class="page_text_input" value=""> <br>
+              </fieldset>
+          </p>
+        </section>
+        <!-- <section class="about-section about-code">
+          <p><img src="assets/img/doctor.png" alt="doctor" style="width:100%;"></p>
+
+        </section>-->
+        <footer class="about-section footer">
+          <div class="rainbow-button-wrapper">
+            <button id="firstUser" class="firstUser-button modal-hide">Benutzer erstellen und NEMO starten</button>
+          </div>
+        </footer>
+      </main>
+    </div>
+  </div>
+</template>

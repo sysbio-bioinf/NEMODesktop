@@ -7,6 +7,10 @@ const psubmit = document.getElementById('psubmit');
 const path = require('path');
 const database = require(path.resolve(__dirname, "../../database"));
 
+const isWindows = process.platform === "win32";
+
+const { dialog } = require('electron').remote;
+
 function patientId() {
   function s4() {
     return Math.floor((1 + Math.random()) * 0x10000)
@@ -68,11 +72,27 @@ psubmit.addEventListener('click', async () => {
         
       ipcRenderer.send('addPatientToDb',new_patient);
     }else{
-      alert('Bitte stellen Sie korrekte Eingaben zur Verfügung!');
+      var options = {
+        type: 'warning',
+        title: "Information",
+        buttons: ["Ok"],
+        detail:"Bitte stellen Sie korrekte Eingaben zur Verfügung!",
+        message: ''
+      };
+      dialog.showMessageBox(null,options);
+      //alert('Bitte stellen Sie korrekte Eingaben zur Verfügung!');
     }
 
   }catch (error) {
-    alert("Der Patient konnte nicht angelegt werden!");
+    var options = {
+      type: 'info',
+      title: "Information",
+      buttons: ["Ok"],
+      detail:"Der Patient konnte nicht angelegt werden!",
+      message: ''
+    };
+    dialog.showMessageBox(null,options);
+    //alert("Der Patient konnte nicht angelegt werden!");
   }
 
 });
@@ -148,7 +168,15 @@ function delete_table_values() {
 }
 
 ipcRenderer.on('patientAddedConfirm', function(event,arg) {
-  alert("Der Patient wurde erfolgreich angelegt!");
+  var options = {
+    type: 'info',
+    title: "Information",
+    buttons: ["Ok"],
+    detail:"Der Patient wurde erfolgreich angelegt!",
+    message: ''
+  };
+  dialog.showMessageBox(null,options);
+  //alert("Der Patient wurde erfolgreich angelegt!");
   tmp = document.getElementById('fname');
   tmp.value = "";
   tmp.placeholder = "Text eingeben ...";

@@ -366,6 +366,23 @@
   overflow: auto; 
 }
 
+.scrolable_table-6 tbody{
+  overflow: auto;
+  display: block;
+  height: 30vh; /*200px;*/
+  width: 80vh; /*100%;*/
+  table-layout: fixed;
+  word-wrap: break-word;
+}
+
+.scrolable_table-6 thead, .scrolable_table-6 tbody tr{
+  display:table;
+  width: 80vh;
+  table-layout: fixed;
+  border: 0.5px solid gray;
+  resize: both; 
+  overflow: auto; 
+}
 
 /*.scrolable_table thead tr{
   display: block;

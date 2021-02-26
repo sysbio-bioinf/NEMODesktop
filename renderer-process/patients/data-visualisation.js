@@ -926,17 +926,17 @@ async function fill_chart(table_row_index) {
             diarrhoe[i] = tmp[i].dia;               //Diarrhö
             general[i] = tmp[i].general;            //Allgemeinbefinden
 
-	    //Targeted tumor therapy
-	    fatigue[i] = tmp[i].fatigue;	    //Muedigkeit
-	    hypertension[i] = tmp[i].hypertension;  //Blutdruck
-	    eczema[i] = tmp[i].eczema;		    //Hautausschlag
-	    liver[i] = tmp[i].liver;		    //Gelbfaerbung der Augen
-	    vision[i] = tmp[i].vision;		    //Sehstoerungen
-	    raceheart[i] = tmp[i].raceheart;	    //Puls
-	    muscle[i] = tmp[i].muscle;		    //Muskelschmerzen
-	    joint[i] = tmp[i].joint;		    //Gelenkschmerzen
-	    breath[i] = tmp[i].breath;		    //Atemnot
-	    exercise[i] = tmp[i].exercise;	    //Koerperliche Belastbarkeit
+            //Targeted tumor therapy
+            fatigue[i] = tmp[i].fatigue;	    //Muedigkeit
+            hypertension[i] = tmp[i].hypertension;  //Blutdruck
+            eczema[i] = tmp[i].eczema;		    //Hautausschlag
+            liver[i] = tmp[i].liver;		    //Gelbfaerbung der Augen
+            vision[i] = tmp[i].vision;		    //Sehstoerungen
+            raceheart[i] = tmp[i].raceheart;	    //Puls
+            muscle[i] = tmp[i].muscle;		    //Muskelschmerzen
+            joint[i] = tmp[i].joint;		    //Gelenkschmerzen
+            breath[i] = tmp[i].breath;		    //Atemnot
+            exercise[i] = tmp[i].exercise;	    //Koerperliche Belastbarkeit
         }
 
 
@@ -1046,11 +1046,11 @@ async function fill_chart(table_row_index) {
                         tmp_appetite.push(appetite[tmp_cnt]); tmp_diarrhoe.push(diarrhoe[tmp_cnt]);     //Nahrungsaufnahme  //Diarrhö
                         tmp_general.push(general[tmp_cnt]); tmp_gewicht.push(gewicht[tmp_cnt]);         //Allgemeinbefinden  //Übermitteltes Gewicht in kg
 
-			tmp_fatigue.push(fatigue[i]); tmp_hypertension.push(hypertension[i]);		//Muedigkeit	//Blutdruck
-			tmp_eczema.push(eczema[i]); tmp_liver.push(liver[i]);				//Hautausschlag	//Gelbfaerbung der Augen
-			tmp_vision.push(vision[i]); tmp_raceheart.push(raceheart[i]);			//Sehstoerungen	//Puls
-			tmp_muscle.push(muscle[i]); tmp_joint.push(joint[i]);				//Muskelschmerzen	//Gelenkschmerzen
-			tmp_breath.push(breath[i]); tmp_exercise.push(exercise[i]);			//Atemnot	//Koerperliche Belastbarkeit
+                        tmp_fatigue.push(fatigue[i]); tmp_hypertension.push(hypertension[i]);		//Muedigkeit	//Blutdruck
+                        tmp_eczema.push(eczema[i]); tmp_liver.push(liver[i]);				//Hautausschlag	//Gelbfaerbung der Augen
+                        tmp_vision.push(vision[i]); tmp_raceheart.push(raceheart[i]);			//Sehstoerungen	//Puls
+                        tmp_muscle.push(muscle[i]); tmp_joint.push(joint[i]);				//Muskelschmerzen	//Gelenkschmerzen
+                        tmp_breath.push(breath[i]); tmp_exercise.push(exercise[i]);			//Atemnot	//Koerperliche Belastbarkeit
                         tmp_cnt = i + 1
                     }
                 }
@@ -1096,6 +1096,10 @@ async function fill_chart(table_row_index) {
             }
             all_dates.sort(function (a, b) { return a - b });
 
+            var all_dates_labels = all_dates;
+
+            var all_dates_tmp = Array(all_dates.length).fill(1).map( (_, i) => i+1 )
+
             var all_dates_ms = [];
             for (var i = 0; i < all_dates.length; i++) {
                 all_dates_ms[i] = all_dates[i].getTime();
@@ -1118,18 +1122,22 @@ async function fill_chart(table_row_index) {
                 if (idx < 0) {
                     regular_visit[i] = -1;
                     visit_date_data.push({
-                        x: all_dates[i],
-                        y: 0
+                        x: all_dates_tmp[i],
+                        y: -1
                     });
                 } else {
                     if (tmp_visit[idx].regular_visit == 0) {
-                        regular_visit[i] = "Ungewöhnlicher Arzttermin";
+                        regular_visit[i] = "Außerplanmäßiger Termin";
                     } else {
-                        regular_visit[i] = "Gewöhnlicher Arzttermin";
+                        regular_visit[i] = "Regulärer Termin";
                     }
                     visit_date_data.push({
-                        x: all_dates[i],
-                        y: 3
+                        x: all_dates_tmp[i],
+                        y: 4
+                    });
+                    visit_date_data.push({
+                        x: all_dates_tmp[i]+0.0001, //workaround for vertical line
+                        y: -1
                     });
                 }
             }
@@ -1139,14 +1147,18 @@ async function fill_chart(table_row_index) {
                 if (idx < 0) {
                     medication_update_label[i] = -1;
                     medication_update_data.push({
-                        x: all_dates[i],
-                        y: 0
+                        x: all_dates_tmp[i],
+                        y: -1
                     });
                 } else {
                     medication_update_label[i] = "Medikation geändert";
                     medication_update_data.push({
-                        x: all_dates[i],
-                        y: 3
+                        x: all_dates_tmp[i],
+                        y: 4
+                    });
+                    medication_update_data.push({
+                        x: all_dates_tmp[i]+0.0001,  //workaround for vertical line
+                        y: -1
                     });
                 }
             }
@@ -1200,6 +1212,8 @@ async function fill_chart(table_row_index) {
 		var muscle_data = []; var joint_data = []; var breath_data = [];						//Muskelschmerzen	//Gelenkschmerzen	//Atemnot
 		var exercise_data = [];												//Koerperliche Belastbarkeit
 		
+        all_dates = Array(all_dates.length).fill(1).map( (_, i) => i+1 );
+
             for (var i = 0; i < all_dates_ms.length; i++) {
                 var idx = datum_ms.indexOf(all_dates_ms[i]);
                 if (idx < 0) {
@@ -1247,10 +1261,10 @@ async function fill_chart(table_row_index) {
                         x: all_dates[i],
                         y: null
                     });
-		    fatigue_data.push({		    //Muedigkeit
-			x: all_dates[i],
-			y: null
-		    });
+                    fatigue_data.push({		    //Muedigkeit
+                    x: all_dates[i],
+                    y: null
+                    });
                     medication_data.push({          //Bedarfsmedikation
                         x: all_dates[i],
                         y: null
@@ -1259,47 +1273,47 @@ async function fill_chart(table_row_index) {
                         x: all_dates[i],
                         y: null
                     });
-		    // Targeted tumor therapy
-		    /*fatigue_data.push({		    //Muedigkeit
-			x: all_dates[i],
-			y: null
-		    });*/
-		    hypertension_data.push({	    //Blutdruck
-			x: all_dates[i],
-			y: null
-		    });
-		    eczema_data.push({		    //Hautausschlag
-			x: all_dates[i],
-			y: null
-		    });
-		    liver_data.push({		    //Gelbfaerbung der Augen
-			x: all_dates[i],
-			y: null
-		    });
-		    vision_data.push({		    //Sehstoerungen
-			x: all_dates[i],
-			y: null
-		    });
-		    raceheart_data.push({	    //Puls
-			x: all_dates[i],
-			y: null
-		    });
-		    muscle_data.push({	   	    //Muskelschmerzen
-			x: all_dates[i],
-			y: null
-		    });
-		    joint_data.push({	   	    //Gelenkschmerzen
-			x: all_dates[i],
-			y: null
-		    });
-		    breath_data.push({	   	    //Atemnot
-			x: all_dates[i],
-			y: null
-		    });
-		    exercise_data.push({	    //Koerperliche Belastbarkeit
-			x: all_dates[i],
-			y: null
-		    });
+                    // Targeted tumor therapy
+                    /*fatigue_data.push({		    //Muedigkeit
+                    x: all_dates[i],
+                    y: null
+                    });*/
+                    hypertension_data.push({	    //Blutdruck
+                    x: all_dates[i],
+                    y: null
+                    });
+                    eczema_data.push({		    //Hautausschlag
+                    x: all_dates[i],
+                    y: null
+                    });
+                    liver_data.push({		    //Gelbfaerbung der Augen
+                    x: all_dates[i],
+                    y: null
+                    });
+                    vision_data.push({		    //Sehstoerungen
+                    x: all_dates[i],
+                    y: null
+                    });
+                    raceheart_data.push({	    //Puls
+                    x: all_dates[i],
+                    y: null
+                    });
+                    muscle_data.push({	   	    //Muskelschmerzen
+                    x: all_dates[i],
+                    y: null
+                    });
+                    joint_data.push({	   	    //Gelenkschmerzen
+                    x: all_dates[i],
+                    y: null
+                    });
+                    breath_data.push({	   	    //Atemnot
+                    x: all_dates[i],
+                    y: null
+                    });
+                    exercise_data.push({	    //Koerperliche Belastbarkeit
+                    x: all_dates[i],
+                    y: null
+                    });
                 } else {
                     gewicht_data.push({            //Gewicht am Tag
                         x: all_dates[i],
@@ -1345,10 +1359,10 @@ async function fill_chart(table_row_index) {
                         x: all_dates[i],
                         y: pnp[idx]
                     });
-		    fatigue_data.push({		    //Muedigkeit
-			x: all_dates[i],
-			y: fatigue[idx]
-		    });
+                    fatigue_data.push({		    //Muedigkeit
+                    x: all_dates[i],
+                    y: fatigue[idx]
+                    });
                     medication_data.push({      //Bedarfsmedikation
                         x: all_dates[i],
                         y: 3 * medication[idx]
@@ -1358,49 +1372,49 @@ async function fill_chart(table_row_index) {
                         y: weight_loss[idx]
                     });
 		
-		   // Targeted tumor therapy
-		    /*fatigue_data.push({		    //Muedigkeit
-			x: all_dates[i],
-			y: fatigue[idx]
-		    });*/
-		    hypertension_data.push({	    //Blutdruck
-			x: all_dates[i],
-			y: hypertension[idx]
-		    });
-		    eczema_data.push({		    //Hautausschlag
-			x: all_dates[i],
-			y: eczema[idx]
-		    });
-		    liver_data.push({		    //Gelbfaerbung der Augen
-			x: all_dates[i],
-			y: liver[idx]
-		    });
-		    vision_data.push({		    //Sehstoerungen
-			x: all_dates[i],
-			y: vision[idx]
-		    });
-		    raceheart_data.push({	    //Puls // TODO Schema
-			x: all_dates[i],
-			y: null
-		    });
-		    muscle_data.push({	   	    //Muskelschmerzen
-			x: all_dates[i],
-			y: muscle[idx]
-		    });
-		    joint_data.push({	   	    //Gelenkschmerzen
-			x: all_dates[i],
-			y: joint[idx]
-		    });
-		    breath_data.push({	   	    //Atemnot
-			x: all_dates[i],
-			y: breath[idx]
-		    });
-		    exercise_data.push({	    //Koerperliche Belastbarkeit
-			x: all_dates[i],
-			y: exercise[idx]
-		    });
-                }
-            }
+                    // Targeted tumor therapy
+                    /*fatigue_data.push({		    //Muedigkeit
+                    x: all_dates[i],
+                    y: fatigue[idx]
+                    });*/
+                    hypertension_data.push({	    //Blutdruck
+                        x: all_dates[i],
+                        y: hypertension[idx]
+                    });
+                    eczema_data.push({		    //Hautausschlag
+                        x: all_dates[i],
+                        y: eczema[idx]
+                    });
+                    liver_data.push({		    //Gelbfaerbung der Augen
+                        x: all_dates[i],
+                        y: liver[idx]
+                    });
+                    vision_data.push({		    //Sehstoerungen
+                        x: all_dates[i],
+                        y: vision[idx]
+                    });
+                    raceheart_data.push({	    //Puls // TODO Schema
+                        x: all_dates[i],
+                        y: null
+                    });
+                    muscle_data.push({	   	    //Muskelschmerzen
+                        x: all_dates[i],
+                        y: muscle[idx]
+                    });
+                    joint_data.push({	   	    //Gelenkschmerzen
+                        x: all_dates[i],
+                        y: joint[idx]
+                    });
+                    breath_data.push({	   	    //Atemnot
+                        x: all_dates[i],
+                        y: breath[idx]
+                    });
+                    exercise_data.push({	    //Koerperliche Belastbarkeit
+                        x: all_dates[i],
+                        y: exercise[idx]
+                    });
+                        }
+                    }
 
             var tmp_bar_data = [];
             for (var i = 0; i < all_dates_ms.length; i++){
@@ -1421,16 +1435,16 @@ async function fill_chart(table_row_index) {
             var pnp_data_colors = generate_bar_colors(pnp_data);
             var weight_loss_data_colors = generate_bar_colors(weight_loss_data);
 
-	    var fatigue_data_colors = generate_bar_colors(fatigue_data);
-	    var hypertension_data_colors = generate_bar_colors(hypertension_data);
-	    var eczema_data_colors = generate_bar_colors(eczema_data);
-	    var liver_data_colors = generate_bar_colors(liver_data);
-	    var vision_data_colors = generate_bar_colors(vision_data);
-	    var raceheart_data_colors = generate_bar_colors(raceheart_data);
-	    var muscle_data_colors = generate_bar_colors(muscle_data);
-	    var joint_data_colors = generate_bar_colors(joint_data);
-	    var breath_data_colors = generate_bar_colors(breath_data);
-	    var exercise_data_colors = generate_bar_colors(exercise_data);
+            var fatigue_data_colors = generate_bar_colors(fatigue_data);
+            var hypertension_data_colors = generate_bar_colors(hypertension_data);
+            var eczema_data_colors = generate_bar_colors(eczema_data);
+            var liver_data_colors = generate_bar_colors(liver_data);
+            var vision_data_colors = generate_bar_colors(vision_data);
+            var raceheart_data_colors = generate_bar_colors(raceheart_data);
+            var muscle_data_colors = generate_bar_colors(muscle_data);
+            var joint_data_colors = generate_bar_colors(joint_data);
+            var breath_data_colors = generate_bar_colors(breath_data);
+            var exercise_data_colors = generate_bar_colors(exercise_data);
 
             var visit_date_data_colors = generate_visits_colors(visit_date_data);
             var medication_data_colors = generate_bedarfsmedication_colors(medication_data);
@@ -1547,7 +1561,7 @@ async function fill_chart(table_row_index) {
                         borderColor: "rgba(225, 225, 225, 1)",
                         backgroundColor: pnp_data_colors
                     },
-		    {
+		            {
                         label: "Müdigkeit",
                         data: tmp_bar_data,
                         hidden: chart_status[13],
@@ -1566,8 +1580,8 @@ async function fill_chart(table_row_index) {
                         backgroundColor: weight_loss_data_colors
                     },
 
-			//Targeted tumor therapy
-		    /*{
+                    //Targeted tumor therapy
+                    /*{
                         label: "Müdigkeit",
                         data: tmp_bar_data,
                         hidden: chart_status[13],
@@ -1576,7 +1590,7 @@ async function fill_chart(table_row_index) {
                         borderColor: "rgba(225,225,225,1)",
                         backgroundColor: fatigue_data_colors
                     },*/
-		    {
+		            {
                         label: "Blutdruck",
                         data: tmp_bar_data,
                         hidden: chart_status[14],
@@ -1585,7 +1599,7 @@ async function fill_chart(table_row_index) {
                         borderColor: "rgba(225,225,225,1)",
                         backgroundColor: hypertension_data_colors
                     },
-		    {	
+		            {	
                         label: "Hautausschlag",
                         data: tmp_bar_data,
                         hidden: chart_status[15],
@@ -1594,7 +1608,7 @@ async function fill_chart(table_row_index) {
                         borderColor: "rgba(225,225,225,1)",
                         backgroundColor: eczema_data_colors
                     },
-		    {	
+		            {	
                         label: "Gelbfärbung der Augen",
                         data: tmp_bar_data,
                         hidden: chart_status[16],
@@ -1603,7 +1617,7 @@ async function fill_chart(table_row_index) {
                         borderColor: "rgba(225,225,225,1)",
                         backgroundColor: liver_data_colors
                     },
-		    {	
+		            {	
                         label: "Sehstörungen",
                         data: tmp_bar_data,
                         hidden: chart_status[17],
@@ -1612,7 +1626,7 @@ async function fill_chart(table_row_index) {
                         borderColor: "rgba(225,225,225,1)",
                         backgroundColor: vision_data_colors
                     },
-		    {	
+		            {	
                         label: "Puls",
                         data: tmp_bar_data,
                         hidden: chart_status[18],
@@ -1621,7 +1635,7 @@ async function fill_chart(table_row_index) {
                         borderColor: "rgba(225,225,225,1)",
                         backgroundColor: raceheart_data_colors
                     },
-		    {	
+		            {	
                         label: "Muskelschmerzen",
                         data: tmp_bar_data,
                         hidden: chart_status[19],
@@ -1630,7 +1644,7 @@ async function fill_chart(table_row_index) {
                         borderColor: "rgba(225,225,225,1)",
                         backgroundColor: muscle_data_colors
                     },
-		    {	
+		            {	
                         label: "Gelenkschmerzen",
                         data: tmp_bar_data,
                         hidden: chart_status[20],
@@ -1639,7 +1653,7 @@ async function fill_chart(table_row_index) {
                         borderColor: "rgba(225,225,225,1)",
                         backgroundColor: joint_data_colors
                     },
-		    {	
+		            {	
                         label: "Atemnot",
                         data: tmp_bar_data,
                         hidden: chart_status[21],
@@ -1648,7 +1662,7 @@ async function fill_chart(table_row_index) {
                         borderColor: "rgba(225,225,225,1)",
                         backgroundColor: breath_data_colors
                     },
-		    {	
+		            {	
                         label: "Körperliche Belastbarkeit",
                         data: tmp_bar_data,
                         hidden: chart_status[22],
@@ -1659,11 +1673,10 @@ async function fill_chart(table_row_index) {
                     }
                 ]
             }
-
-
-            for (var i = 0; i < all_dates.length; i++) {
-                d = all_dates[i];
-                all_dates[i] = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear() + " " +
+            
+            for (var i = 0; i < all_dates_labels.length; i++) {
+                d = all_dates_labels[i];
+                all_dates_labels[i] = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear() + " " +
                     d.getHours();
                 bla = "";
                 if ((d.getMinutes() + "").length == 1) {
@@ -1672,8 +1685,10 @@ async function fill_chart(table_row_index) {
                     bla = d.getMinutes();
                 }
 
-                all_dates[i] = all_dates[i] + ":" + bla;
+                all_dates_labels[i] = all_dates_labels[i] + ":" + bla;
             }
+
+            all_dates = Array(all_dates.length).fill(1).map( (_, i) => i+1 )
 
             var data = {
                 labels: all_dates,
@@ -1750,10 +1765,10 @@ async function fill_chart(table_row_index) {
                         borderColor: "rgba(191, 159, 63, 0.8)",
                         backgroundColor: "rgba(191, 159, 63, 0.8)"
                     },
-		    {
+		            {
                         label: "Müdigkeit",
                         data: fatigue_data,
-		        id: "y-1",
+		                id: "y-1",
                         hidden: chart_status[13],
                         borderColor: "rgba(141,211,199,1)",
                         backgroundColor: "rgba(141,211,199,1)"
@@ -1771,8 +1786,11 @@ async function fill_chart(table_row_index) {
                         data: visit_date_data,
                         id: "y-1",
                         hidden: chart_status[10],
-                        type: "bar",
-                        xAxisID: "x-2",
+                        type: "line",
+                        showLine: true,
+                        steppedLine: true,
+                        pointRadius: 0,
+                        borderWidth: 6,
                         borderColor: "rgba(0, 0, 0, 1)",
                         backgroundColor: "rgba(0, 0, 0, 1)"
                     },
@@ -1781,8 +1799,12 @@ async function fill_chart(table_row_index) {
                         data: medication_update_data,
                         id: "y-1",
                         hidden: chart_status[11],
-                        type: "bar",
-                        xAxisID: "x-2",
+                        type: "line",
+                        showLine: true,
+                        steppedLine: true,
+                        pointRadius: 0,
+                        pointHitradius: 10,
+                        borderWidth: 6,
                         borderColor: "rgba(138, 63, 191, 1)",
                         backgroundColor: "rgba(138, 63, 191, 1)"
                     },
@@ -1795,83 +1817,83 @@ async function fill_chart(table_row_index) {
                         backgroundColor: "rgba(245,176,66,0.8)"
                     },
 
-		    //Targeted tumor therapy
-		    /*{
+                    //Targeted tumor therapy
+                    /*{
                         label: "Müdigkeit",
                         data: fatigue_data,
-		        id: "y-1",
+		                id: "y-1",
                         hidden: chart_status[13],
                         borderColor: "rgba(141,211,199,1)",
                         backgroundColor: "rgba(141,211,199,1)"
                     },*/
-		    {
+		            {
                         label: "Blutdruck",
                         data: hypertension_data,
-			id: "y-1",
+			            id: "y-1",
                         hidden: chart_status[14],
                         borderColor: "rgba(225,225,0,1)",
                         backgroundColor: "rgba(225,225,0,1)"
                     },
-		    {	
+		            {	
                         label: "Hautausschlag",
                         data: eczema_data,
-			id: "y-1",
+			            id: "y-1",
                         hidden: chart_status[15],
                         borderColor: "rgba(190,186,218,1)",
                         backgroundColor: "rgba(190,186,218,1)"
                     },
-		    {	
+		            {	
                         label: "Gelbfärbung der Augen",
                         data: liver_data,
-			id: "y-1",
+			            id: "y-1",
                         hidden: chart_status[16],
                         borderColor: "rgba(251,128,114,1)",
                         backgroundColor: "rgba(251,128,114,1)"
                     },
-		    {	
+		            {	
                         label: "Sehstörungen",
                         data: vision_data,
-			id: "y-1",
+			            id: "y-1",
                         hidden: chart_status[17],
                         borderColor: "rgba(128,177,211,1)",
                         backgroundColor: "rgba(128,177,211,1)"
                     },
-		    {	
+		            {	
                         label: "Puls",
                         data: raceheart_data,
-			id: "y-1",
+			            id: "y-1",
                         hidden: chart_status[18],
                         borderColor: "rgba(203,140,58,1)",
                         backgroundColor: "rgba(203,140,58,1)"
                     },
-		    {	
+		            {	
                         label: "Muskelschmerzen",
                         data: muscle_data,
-			id: "y-1",
+			            id: "y-1",
                         hidden: chart_status[19],
                         borderColor: "rgba(179,222,105,1)",
                         backgroundColor: "rgba(179,222,105,1)"
                     },
-		    {	
+		            {	
                         label: "Gelenkschmerzen",
                         data: joint_data,
-			id: "y-1",
+			            id: "y-1",
                         hidden: chart_status[20],
                         borderColor: "rgba(252,205,229,1)",
                         backgroundColor: "rgba(252,205,229,1)"
                     },
-		    {	
+		            {	
                         label: "Atemnot",
                         data: breath_data,
-			id: "y-1",
+			            id: "y-1",
                         hidden: chart_status[21],
                         borderColor: "rgba(160,160,160,1)",
                         backgroundColor: "rgba(160,160,160,1)"
                     },
-		    {	
+		            {	
                         label: "Körperliche Belastbarkeit",
                         data: exercise_data,
-			id: "y-1",
+			            id: "y-1",
                         hidden: chart_status[22],
                         borderColor: "rgba(188,128,189,1)",
                         backgroundColor: "rgba(188,128,189,1)"
@@ -1899,18 +1921,24 @@ async function fill_chart(table_row_index) {
                         }],
                         xAxes: [
                             {
+                                type: "linear",
                                 id: "x-2",
                                 position: "bottom",
                                 display: "false",
+
                                 barPercentage: 0.5,
                                 barThickness: 3,
                                 ticks: {
+                                    max: all_dates.length,
+                                    min: 1,
+                                    stepSize: 1,
                                     callback: function (value, index, values) {
-                                        if (anzeige.checked == false) {
-                                            return value.split(" ")[0];
-                                        } else {
-                                            return value;
-                                        }
+                                        return all_dates_labels[value-1];
+                                        //if (anzeige.checked == false) {
+                                        //    return value.split(" ")[0];
+                                        //} else {
+                                        //    return value;
+                                        //}
                                     }
                                 }
                             }
@@ -1925,6 +1953,9 @@ async function fill_chart(table_row_index) {
                         mode: 'point',
                         axis: 'y',
                         callbacks: {
+                            title: function (tooltipItem, data) {
+                                return all_dates_labels[tooltipItem.datasetIndex];
+                            },
                             label: function (tooltipItem, data) {
                                 if (data.datasets[tooltipItem.datasetIndex].label != "Arzttermin") {
                                     if (data.datasets[tooltipItem.datasetIndex].label == "Änderung der Medikation") {
@@ -1983,14 +2014,22 @@ async function fill_chart(table_row_index) {
                             pan: {
                                 enabled: true,
                                 mode: 'x',
-                                speed: 5
+                                speed: 20,
+		                        threshold: 10,
+                                rangeMin: {x: 1},
+                                rangeMax: {x: all_dates.length}
                                 //onPan: function({chart}) {console.log('Panning...');},
                                 //onPanComplete: function({chart}) {console.log('...panning over!');}
                             },
                             zoom: {
                                 enabled: true,
+                                drag: false,
                                 mode: 'x',
-                                speed: 10
+                                speed: 0.1,
+                                threshold: 2,
+                                sensitivity: 3,
+                                rangeMin: {x: 1},
+                                rangeMax: {x: all_dates.length}
                                 //onZoom: function({chart}) {console.log('Zooming...')},
                                 //onZoomComplete: function({chart}) {console.log('...zooming over!')}
 
@@ -1999,31 +2038,6 @@ async function fill_chart(table_row_index) {
                     }
                 }
             });
-
-            /*current_chart = new Chart(chart_canvas, {
-                type: 'bar',
-                data: bar_data,
-                options: {
-                    scales: {
-                        xAxes: [{
-                            stacked: true,
-                            categoryPercentage: 1,
-                            barPercentage: 1
-                        }],
-                        yAxes: [{
-                            stacked: true,
-                            ticks: {
-                                min: 0,
-                                max: 13*0.25,
-                                stepSize: 0.25,
-                                callback: function(value, index, values) {
-                                    return data.datasets[index].label;
-                                }
-                            }
-                        }]
-                    }
-                }
-            });*/
             current_chart.update();
         }
 
@@ -2127,9 +2141,13 @@ vizRenderer.on('patientEditedConfirmV', async(event,arg) => {
 
 vizRenderer.on('checkIDV', async (event, arg) => {
     var prom = await database.checkForID(arg);
-    await Promise.all([prom]).then(function (results) {
+    var promII = await database.readAllPatients();
+    var promIII = await database.readUUID(arg.pid);
+    await Promise.all([prom,promII,promIII]).then(function (results) {
         var argII = results[0];
-        vizRenderer.send('checkIDconf', argII);
+        var argIII = results[1];
+        var argIV = results[2];
+        vizRenderer.send('checkIDconf', [argII,argIII,argIV]);
     });
 });
 
@@ -2247,6 +2265,22 @@ vizRenderer.on('getPDFPresetsV', async (event,arg) => {
         var presetsDB = results[0];
 
         vizRenderer.send('sendPDFPresetsBack',presetsDB);
+    });
+});
+
+vizRenderer.on('readAllPatientsV', async (event,arg) => {
+    var res = await database.readAllPatients();
+    await Promise.all([res]).then(function(results) {
+        var ress = results[0];
+        vizRenderer.send('response-to-devicesV',ress)
+    });
+});
+
+vizRenderer.on('saveDeviceV', async (event,arg) => {
+    var res = await database.addDevice(arg);
+    await Promise.all([res]).then(function(results) {
+        var ress = results[0];
+        //vizRenderer.send('response-to-devicesV',ress)
     });
 });
 

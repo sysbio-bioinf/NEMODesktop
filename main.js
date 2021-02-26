@@ -23,6 +23,8 @@ let ScoreInfoWindow = null;
 let QRWindow = null;
 let editWindow = null;
 let PDFWindow = null;
+let NewDeviceWindow = null;
+let NewPatientWindow = null;
 
 function initialize() {
 
@@ -37,7 +39,8 @@ function initialize() {
       height: 960, //840
       title: app.getName(),
       webPreferences: {
-        nodeIntegration: true
+        nodeIntegration: true,
+        enableRemoteModule: true
       }
     };
 
@@ -57,7 +60,8 @@ function initialize() {
         parent: mainWindow,
         modal: true,
         webPreferences: {
-          nodeIntegration: true
+          nodeIntegration: true,
+          enableRemoteModule: true
         }
       });
       editWindow.loadURL('file://' + __dirname + '/sections/visualisation/new-patient-data.html');  
@@ -72,7 +76,8 @@ function initialize() {
         parent: mainWindow,
         modal: true,
         webPreferences: {
-          nodeIntegration: true
+          nodeIntegration: true,
+          enableRemoteModule: true
         }
       });
       PDFPresetWindow.loadURL('file://' +__dirname + '/sections/visualisation/pdf-preset.html');  
@@ -88,7 +93,8 @@ function initialize() {
         parent: mainWindow,
         modal: true,
         webPreferences: {
-          nodeIntegration: true
+          nodeIntegration: true,
+          enableRemoteModule: true
         }
       });
       NewPDFPresetWindow.loadURL('file://' +__dirname +'/sections/visualisation/new-pdf-preset.html');  
@@ -104,7 +110,8 @@ function initialize() {
         parent: mainWindow,
         modal: true,
         webPreferences: {
-          nodeIntegration: true
+          nodeIntegration: true,
+          enableRemoteModule: true
         }
       });    
       PDFWindow.loadURL('file://' + __dirname + '/sections/visualisation/pdf-export.html');
@@ -119,7 +126,8 @@ function initialize() {
         parent: mainWindow,
         modal: true,
         webPreferences: {
-          nodeIntegration: true
+          nodeIntegration: true,
+          enableRemoteModule: true
         }
       });
       ScoreInfoWindow.loadURL('file://' + __dirname + '/sections/visualisation/info-scoring.html');
@@ -135,12 +143,29 @@ function initialize() {
         parent: mainWindow,
         modal: true,
         webPreferences: {
-          nodeIntegration: true
+          nodeIntegration: true,
+          enableRemoteModule: true
         }
       });
       QRWindow.loadURL('file://' + __dirname + '/sections/interface/qrcode_reader.html');
     }
     
+    if(NewDeviceWindow === null) {
+      NewDeviceWindow = new BrowserWindow({
+        width:900,
+        height:842,
+        show: false,
+        frame: false,
+        parent: mainWindow,
+        modal: true,
+        webPreferences: {
+          nodeIntegration: true,
+          enableRemoteModule: true
+        }
+      });
+      NewDeviceWindow.loadURL('file://' +__dirname + '/sections/interface/device-patient-table.html');
+    } 
+
     // Launch fullscreen with DevTools open, usage: npm run debug
     if (debug) {
       mainWindow.webContents.openDevTools();
@@ -177,6 +202,15 @@ function initialize() {
     PDFWindow.on("closed", (event) => {
       PDFWindow = null;
     });
+
+    NewDeviceWindow.on("closed", (event) => {
+      NewDeviceWindow = null;
+    });
+
+    /*
+    NewPatientWindow.on("closed", (event) => {
+      NewPatientWindow = null;
+    });*/
     
   }
 
@@ -305,6 +339,10 @@ function initialize() {
       PDFPresetWindow.webContents.send('sendPDFPresets',arg);
     });
 
+    ipcMain.on('save-device', function(event,arg) {
+      mainWindow.webContents.send('saveDeviceV',arg);
+    });
+
     ipcMain.on('pdf-preset-window', function (event, arg) {
       PDFPresetWindow.webContents.send('pdf-data', arg); 
       PDFPresetWindow.show();
@@ -335,6 +373,27 @@ function initialize() {
       PDFWindow.hide();
       PDFPresetWindow.show();
     });
+
+    ipcMain.on('show-device-window', function(event,arg) {
+      QRWindow.hide();
+      NewDeviceWindow.webContents.send('deviceID-send',arg);
+      NewDeviceWindow.show();
+    });
+
+    ipcMain.on('hide-device-window', function() {
+      NewDeviceWindow.hide();
+    });
+
+    /*
+    ipcMain.on('show-new-patient-window', function() {
+      QRWindow.hide();
+      //TODO
+    });
+
+    ipcMain.on('hide-new-patient-window', function() {
+      //TODO
+      QRWindow.show();
+    });*/
   });
 
   app.on("window-all-closed", () => {
@@ -383,4 +442,90 @@ function loadDemos() {
 
 initialize();
 
+global.loginSuccessful = false;
+global.adminLoggedIn = false;
+global.loggedUsername = "";
 
+const loki = require("lokijs");
+
+ipcMain.on('firstUsers', async (event,args)=>{
+  var len = await database.checkLastUser();
+  if(len==0){
+    console.log("user check 0")
+    event.sender.send('firstUser2',0);
+  }else{
+    console.log("user check 1")
+    event.sender.send('firstUser2',1);
+  }
+})
+
+ipcMain.on('addFirstUser', (event,args)=>{
+  var results = database.addUserToDB(args);
+  global.loginSuccessful = true;
+  global.adminLoggedIn = true;
+  global.loggedUsername = args.uname;
+  var uname = args.username;
+  var passcheck = true;
+  var adm = 1;
+  var packet = {uname,passcheck,adm}
+  event.sender.send('firstUserCreated',packet)
+})
+
+const { dialog } = require('electron')
+
+ipcMain.on('loginSucc', (event, args) => {
+  console.log(args);
+  var succ
+  if (args.passcheck == true) {
+    global.loginSuccessful = true;
+    global.loggedUsername = args.uname;
+    succ = "Login erfolgreich"
+  } else {
+    global.loginSuccessful = false;
+    succ = "Login fehlgeschlagen"
+  }
+  if (args.adm == 1){
+    global.adminLoggedIn = true;
+  } else {
+    global.adminLoggedIn = false;
+  }
+  const options = {
+      type: 'info',
+      title: 'Information',
+      message: succ,
+      buttons: ['Ok']
+    };
+  dialog.showMessageBox(options)
+  console.log("login successful: "+global.loginSuccessful)
+});
+
+var systemLogout = function(){
+  global.loginSuccessful = false;
+  global.adminLoggedIn = false;
+  global.loggedUsername = "";
+  const options = {
+      type: 'info',
+      title: 'Information',
+      message: "Sie wurden ausgeloggt.",
+      buttons: ['Ok']
+    };
+  dialog.showMessageBox(options)
+}
+
+ipcMain.on('logout-message', (event, args) => { 
+  systemLogout()
+})
+
+ipcMain.on('loginChecker',(event,args)=>{
+  const options = {
+    type: 'info',
+    title: 'Information',
+    message: "Zuerst einloggen um die App nutzen zu können.",
+    buttons: ['Ok']
+  };
+  dialog.showMessageBox(options)
+})
+
+ipcMain.on('consoleLogger',(event,args)=>{
+  console.log(args)
+})

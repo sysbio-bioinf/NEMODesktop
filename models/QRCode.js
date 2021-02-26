@@ -139,8 +139,8 @@ static checkString(str)
     var versionNumber = String(array[0]);
     if(/v[^0-9]/.test(versionNumber)) { console.log("Versionsnummer ungültig."); return false; }
 
-    var patientId = String(array[1]);
-    if(/uku[^0-9]/.test(patientId) || Number(patientId) <= 0) { console.log("ID nicht alphanumerisch oder == 0"); return false; } //cast unsuccessful 
+    //var patientId = String(array[1]);
+    //if(/uku[^0-9]/.test(patientId) || Number(patientId) <= 0) { console.log("ID nicht alphanumerisch oder == 0"); return false; } //cast unsuccessful 
     
     var qrIdx = Number(array[3]);
     if(typeof qrIdx != "number" || qrIdx < 1) { console.log("QR-Code Index nicht numerisch"); return false; } //cast unsuccessful 
@@ -322,7 +322,10 @@ static parseStringToRecords(str)
     // if PatientID Is in Format 1,2 ..., change it to uku1, etc.
     if(typeof Number(patientId) == "number" && Number(patientId) > 0) {
         patientId = "uku"+Number(patientId);
+    }else { //UUID
+        patientId = patientId;
     }
+    console.log(patientId);
 
     var restArray = array[2];
     var restArraySplit = restArray.split("~ "); // all entries to patient as strings
