@@ -19,8 +19,8 @@ The tracked records of patients are transmitted via a sequence of QR codes, ther
 ## Installation
 
 Download the binaries for your operating system below:
-* [Mac OS X](https://github.com/sysbio-bioinf/NEMODesktop/binaries/mac/NEMO.dmg)
-* [Windows](https://github.com/sysbio-bioinf/NEMODesktop/binaries/win/NEMO.msi)
+* [Mac OS X](https://github.com/sysbio-bioinf/NEMODesktop/blob/main/binaries/mac/NEMO.dmg?raw=true)
+* [Windows](https://github.com/sysbio-bioinf/NEMODesktop/blob/main/binaries/win/NEMO.msi?raw=true)
 
 For macOS, open the dmg and drag & drop the NEMO icon to the Applications folder. The app can then be started by clicking on the NEMO icon.
 
